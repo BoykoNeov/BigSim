@@ -281,9 +281,13 @@ transient **fin equation** (frozen conduction solver + lateral air loss composed
 operator splitting, engine untouched), validated against the lumped-capacitance
 limit, bar energy conservation, and a resolution-converged thermal benchmark
 (cooling-rate-vs-distance vs the published Jominy equivalence); output =
-cooling-rate-vs-distance. Full suite **139 green**. Next is Steel **Phase 2b/2c** —
-the hardenability alloy C-curve shift + microstructure→hardness map → the Jominy
-hardness curve and the 1045/4140 benchmark.
+cooling-rate-vs-distance. **Phase 2b built** — the alloy **hardenability** C-curve shift
+(`kinetics.hardenability_factor` / `ccurve_for_steel`): Mn/Cr/Mo slide the TTT curve right
+by a Grossmann-potency multiplicative time-shift on `τ` (default identity → the 1080 demo
+stays byte-identical), so deep-hardening 4140 stays martensitic far deeper into the Jominy
+bar than shallow 1045 — the divergence validated through the frozen thermal field. Full
+suite **147 green**. Next is Steel **Phase 2c** — the microstructure→hardness map → the
+Jominy *hardness*-vs-distance artifact and the 1045/4140 hardness benchmark.
 
 ---
 

@@ -36,7 +36,7 @@ and frozen in Steel is the spine the other two inherit.
 
 ## Status
 
-Building — **Steel Phase 1 is complete** (the foundation). The doctrine, catalog,
+Building — **Steel Phase 1 is complete** (the foundation) and **Phase 2 is underway**. The doctrine, catalog,
 first project plan, and ADRs are in place; the **first engine is built and frozen**
 (the erfc-validated 1-D diffusion/heat solver, `engines/diffusion/`, Steel Phase 1a
 — the spine the whole trio inherits, sealed behind its
@@ -45,8 +45,12 @@ first project plan, and ADRs are in place; the **first engine is built and froze
 Koistinen–Marburger + Andrews M_s) are built on top. The banked Phase-1 artifact:
 *one steel (AISI 1080), four cooling rates, soft pearlite → file-hard martensite*
 ([`docs/figures/steel-four-curves.png`](docs/figures/steel-four-curves.png)). Full
-suite **128 green**. Next: Steel Phase 2 (Jominy hardenability — the first spatial
-reuse of the heat solver). Run the suite with `./run_tests.ps1`.
+suite **147 green**. **Steel Phase 2 is underway**: the Jominy end-quench *spatial
+thermal* model (2a — first reuse of the heat solver, the transient fin equation) and
+the *alloy hardenability* C-curve shift (2b — Mn/Cr/Mo slide the TTT curve right, so
+deep-hardening 4140 stays martensitic far deeper into the bar than shallow 1045) are
+built; next is 2c (microstructure→hardness → the Jominy hardness curve + 1045/4140
+benchmark). Run the suite with `./run_tests.ps1`.
 
 ## Implementation
 
