@@ -14,6 +14,12 @@ test = ["pytest>=7.0"]
 # headless/matplotlib-free; only the render layer (projects/steel/plots.py, demos,
 # notebooks) needs this. Install with `pip install -e .[viz]`.
 viz = ["matplotlib>=3.7"]
+# The teaching notebook (Steel plan §9, slice 1) is opt-in: only projects/steel/steel.ipynb
+# and its execution smoke-test (tests/test_steel_notebook.py) need ipywidgets (the live
+# sliders) + the nbclient/nbformat/ipykernel machinery that runs the notebook headless.
+# matplotlib stays in [viz], so the full runnable combo is `pip install -e .[viz,notebook]`;
+# the committed suite stays notebook-free (the smoke-test is importorskip/kernelspec-gated).
+notebook = ["ipywidgets>=8", "nbclient", "nbformat", "ipykernel"]
 # CALPHAD backend is opt-in (Steel Phase 4): only projects/steel/calphad_backend.py
 # (+ its demo/live tests) needs pycalphad; the committed Phase-4 tests validate fe_c
 # against a frozen reference table and stay pycalphad-free. Thermodynamic databases

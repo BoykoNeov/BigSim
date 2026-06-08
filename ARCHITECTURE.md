@@ -286,10 +286,12 @@ triad green without the optional dependency or any committed database. The
 **experimentation surface** (plan §9) is now **begun**: `sweep.py` — the headless
 sweep/what-if harness (a *pure re-composition* of the validated chain over the cooling-rate
 and composition axes, validated as *harness* correctness) + `demo_sweep.py` and the banked
-`docs/figures/steel-sweep.png` — is **built**; the interactive surfaces (`app.py` Streamlit,
-`steel.ipynb` notebook) remain. Full suite **234 green** (226 without the optional pycalphad/viz
-stack). **Next:** finish the experimentation surface's interactive layers, or — per the build
-order (§4) — begin **Microchip**, which first reuses the frozen `engines/diffusion` spine
+`docs/figures/steel-sweep.png` — is **built**, and its first interactive layer, the
+**`steel.ipynb` teaching notebook** (§9 slice 1: an ipywidgets *thin skin* on the harness,
+executed clean by a subprocess smoke-test), is **built**; the **`app.py` Streamlit** app (slice 2)
+remains. Full suite **235 green** (226 without the optional pycalphad/viz/notebook stack).
+**Next:** finish the experimentation surface's last interactive layer (`app.py`), or — per the
+build order (§4) — begin **Microchip**, which first reuses the frozen `engines/diffusion` spine
 (dopant profiles = the carbon-diffusion code).
 
 ---
