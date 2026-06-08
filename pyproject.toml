@@ -20,6 +20,12 @@ viz = ["matplotlib>=3.7"]
 # matplotlib stays in [viz], so the full runnable combo is `pip install -e .[viz,notebook]`;
 # the committed suite stays notebook-free (the smoke-test is importorskip/kernelspec-gated).
 notebook = ["ipywidgets>=8", "nbclient", "nbformat", "ipykernel"]
+# The Streamlit what-if app (Steel plan §9, slice 2) is opt-in: only projects/steel/app.py
+# (the shareable slider UI) needs streamlit. Its compute helpers are pure sweep re-composition
+# (streamlit/matplotlib-free), so tests/test_app.py stays in the always-green committed suite;
+# only `streamlit run app.py` needs this extra. matplotlib stays in [viz] (the figures), so the
+# full runnable combo is `pip install -e .[viz,app]` — mirroring the notebook's `.[viz,notebook]`.
+app = ["streamlit>=1.30"]
 # CALPHAD backend is opt-in (Steel Phase 4): only projects/steel/calphad_backend.py
 # (+ its demo/live tests) needs pycalphad; the committed Phase-4 tests validate fe_c
 # against a frozen reference table and stay pycalphad-free. Thermodynamic databases
