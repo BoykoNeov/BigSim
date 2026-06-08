@@ -275,8 +275,15 @@ section — currently `docs/plans/steel-production.md`. Steel **Phase 1 is compl
 1a (diffusion/heat spine) **built & frozen** — `engines/diffusion/CONTRACT.md` is
 the first sealed engine contract; 1b (Fe-C equilibrium, `fe_c.py`) and 1c
 (transformation kinetics — `kinetics.py`/`pathint.py`/`cooling.py` + the banked
-four-curves anchor demo) **built**, full suite 128 green. Next is Steel **Phase 2
-(Jominy hardenability)** — the first *spatial* reuse of the frozen heat solver.
+four-curves anchor demo) **built**. **Phase 2a built** — `projects/steel/jominy.py`,
+the first *spatial* reuse of the frozen heat solver: the Jominy end-quench bar as a
+transient **fin equation** (frozen conduction solver + lateral air loss composed by
+operator splitting, engine untouched), validated against the lumped-capacitance
+limit, bar energy conservation, and a resolution-converged thermal benchmark
+(cooling-rate-vs-distance vs the published Jominy equivalence); output =
+cooling-rate-vs-distance. Full suite **139 green**. Next is Steel **Phase 2b/2c** —
+the hardenability alloy C-curve shift + microstructure→hardness map → the Jominy
+hardness curve and the 1045/4140 benchmark.
 
 ---
 
