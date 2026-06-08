@@ -271,23 +271,22 @@ new session:
   old, never edit history).
 
 The immediate build target is in the active project plan's "Immediate next step"
-section — currently `docs/plans/steel-production.md`. Steel **Phase 1 is complete**:
-1a (diffusion/heat spine) **built & frozen** — `engines/diffusion/CONTRACT.md` is
-the first sealed engine contract; 1b (Fe-C equilibrium, `fe_c.py`) and 1c
-(transformation kinetics — `kinetics.py`/`pathint.py`/`cooling.py` + the banked
-four-curves anchor demo) **built**. **Phase 2a built** — `projects/steel/jominy.py`,
-the first *spatial* reuse of the frozen heat solver: the Jominy end-quench bar as a
-transient **fin equation** (frozen conduction solver + lateral air loss composed by
-operator splitting, engine untouched), validated against the lumped-capacitance
-limit, bar energy conservation, and a resolution-converged thermal benchmark
-(cooling-rate-vs-distance vs the published Jominy equivalence); output =
-cooling-rate-vs-distance. **Phase 2b built** — the alloy **hardenability** C-curve shift
-(`kinetics.hardenability_factor` / `ccurve_for_steel`): Mn/Cr/Mo slide the TTT curve right
-by a Grossmann-potency multiplicative time-shift on `τ` (default identity → the 1080 demo
-stays byte-identical), so deep-hardening 4140 stays martensitic far deeper into the Jominy
-bar than shallow 1045 — the divergence validated through the frozen thermal field. Full
-suite **147 green**. Next is Steel **Phase 2c** — the microstructure→hardness map → the
-Jominy *hardness*-vs-distance artifact and the 1045/4140 hardness benchmark.
+section — currently `docs/plans/steel-production.md`. **Steel is complete through its
+planned phases (1–4):** 1a (diffusion/heat spine) **built & frozen** —
+`engines/diffusion/CONTRACT.md`, the first sealed engine contract; 1b/1c (Fe-C
+equilibrium + transformation kinetics + the four-curves anchor demo); 2a–2c (the
+Jominy spatial fin model, the alloy hardenability C-curve shift, and the
+microstructure→hardness map + Jominy hardness benchmark); 3a–3c (the full Maynier
+property model, Hollomon–Jaffe tempering + strength/toughness, and carburizing
+case-hardening — the mass-mode face of the spine); and **Phase 4** —
+`calphad_backend.py`, the optional **CALPHAD** backend (pycalphad) that swaps `fe_c`'s
+parametrized chords for emergent Gibbs-energy-minimised boundaries and extends to
+multicomponent low-alloy steels, with a frozen reference table keeping its validation
+triad green without the optional dependency or any committed database. Full suite
+**217 green** (210 without the optional pycalphad/viz stack). **Next:** either Steel's
+long-deferred experimentation surface (`sweep.py`/`app.py`/`steel.ipynb`, plan §9) or —
+per the build order (§4) — begin **Microchip**, which first reuses the frozen
+`engines/diffusion` spine (dopant profiles = the carbon-diffusion code).
 
 ---
 

@@ -14,6 +14,18 @@ test = ["pytest>=7.0"]
 # headless/matplotlib-free; only the render layer (projects/steel/plots.py, demos,
 # notebooks) needs this. Install with `pip install -e .[viz]`.
 viz = ["matplotlib>=3.7"]
+# CALPHAD backend is opt-in (Steel Phase 4): only projects/steel/calphad_backend.py
+# (+ its demo/live tests) needs pycalphad; the committed Phase-4 tests validate fe_c
+# against a frozen reference table and stay pycalphad-free. Thermodynamic databases
+# are never bundled (plan §6); the Fe-C one ships inside pycalphad, the multicomponent
+# steel one is fetched by calphad_backend.download_mc_fe().
+#   NOTE (Python 3.14): pycalphad pins `symengine<0.14`, but only symengine 0.14.1 has
+#   a 3.14 wheel. Override the cap with a two-step install:
+#       pip install symengine==0.14.1
+#       pip install 'pycalphad>=0.11' --no-deps
+#       pip install xarray pint tinydb runtype pandas
+#   (On Python <3.14 a plain `pip install -e .[calphad]` resolves normally.)
+calphad = ["pycalphad>=0.11"]
 
 # Single-command test runner config (ARCHITECTURE.md §6 / steel plan §7).
 # `pythonpath = ["."]` puts the repo root on sys.path so tests import the
