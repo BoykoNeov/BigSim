@@ -271,9 +271,12 @@ new session:
   old, never edit history).
 
 The immediate build target is in the active project plan's "Immediate next step"
-section — currently `docs/plans/steel-production.md`. Phase 1a (the diffusion/heat
-spine) is **built & frozen** — `engines/diffusion/CONTRACT.md` is the first sealed
-engine contract; next is Phase 1b (Fe-C equilibrium).
+section — currently `docs/plans/steel-production.md`. Steel **Phase 1 is complete**:
+1a (diffusion/heat spine) **built & frozen** — `engines/diffusion/CONTRACT.md` is
+the first sealed engine contract; 1b (Fe-C equilibrium, `fe_c.py`) and 1c
+(transformation kinetics — `kinetics.py`/`pathint.py`/`cooling.py` + the banked
+four-curves anchor demo) **built**, full suite 128 green. Next is Steel **Phase 2
+(Jominy hardenability)** — the first *spatial* reuse of the frozen heat solver.
 
 ---
 

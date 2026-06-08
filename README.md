@@ -36,12 +36,17 @@ and frozen in Steel is the spine the other two inherit.
 
 ## Status
 
-Building. The doctrine, catalog, first project plan (Steel), and the ADRs are in
-place, and the **first engine is built and frozen**: the erfc-validated 1-D
-diffusion/heat solver (`engines/diffusion/`, Steel Phase 1a) — the spine the
-whole trio inherits, sealed behind its validation suite
-([`CONTRACT.md`](engines/diffusion/CONTRACT.md)). Next: Steel Phase 1b (Fe-C
-equilibrium). Run the suite with `./run_tests.ps1`.
+Building — **Steel Phase 1 is complete** (the foundation). The doctrine, catalog,
+first project plan, and ADRs are in place; the **first engine is built and frozen**
+(the erfc-validated 1-D diffusion/heat solver, `engines/diffusion/`, Steel Phase 1a
+— the spine the whole trio inherits, sealed behind its
+[`CONTRACT.md`](engines/diffusion/CONTRACT.md)); and steel's **Fe-C equilibrium**
+(1b) and **transformation kinetics** (1c — Avrami/TTT, Scheil additivity/CCT,
+Koistinen–Marburger + Andrews M_s) are built on top. The banked Phase-1 artifact:
+*one steel (AISI 1080), four cooling rates, soft pearlite → file-hard martensite*
+([`docs/figures/steel-four-curves.png`](docs/figures/steel-four-curves.png)). Full
+suite **128 green**. Next: Steel Phase 2 (Jominy hardenability — the first spatial
+reuse of the heat solver). Run the suite with `./run_tests.ps1`.
 
 ## Implementation
 

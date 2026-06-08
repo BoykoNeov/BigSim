@@ -10,6 +10,10 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
+# Visualization is opt-in (ADR 0002): the compute core and the test suite stay
+# headless/matplotlib-free; only the render layer (projects/steel/plots.py, demos,
+# notebooks) needs this. Install with `pip install -e .[viz]`.
+viz = ["matplotlib>=3.7"]
 
 # Single-command test runner config (ARCHITECTURE.md §6 / steel plan §7).
 # `pythonpath = ["."]` puts the repo root on sys.path so tests import the
