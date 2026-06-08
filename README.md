@@ -36,9 +36,12 @@ and frozen in Steel is the spine the other two inherit.
 
 ## Status
 
-Planning phase. The doctrine, catalog, first project plan (Steel), and the
-language/performance ADR are in place. Next build target: the erfc-validated
-1-D diffusion/heat solver (`engines/diffusion/`) — Phase 1a of the Steel plan.
+Building. The doctrine, catalog, first project plan (Steel), and the ADRs are in
+place, and the **first engine is built and frozen**: the erfc-validated 1-D
+diffusion/heat solver (`engines/diffusion/`, Steel Phase 1a) — the spine the
+whole trio inherits, sealed behind its validation suite
+([`CONTRACT.md`](engines/diffusion/CONTRACT.md)). Next: Steel Phase 1b (Fe-C
+equilibrium). Run the suite with `./run_tests.ps1`.
 
 ## Implementation
 

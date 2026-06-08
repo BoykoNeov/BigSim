@@ -1,0 +1,20 @@
+[project]
+name = "bigsim"
+version = "0.1.0"
+description = "Educational simulator program — shared, separately-validated solver engines + simulators."
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+# Single-command test runner config (ARCHITECTURE.md §6 / steel plan §7).
+# `pythonpath = ["."]` puts the repo root on sys.path so tests import the
+# engines as `engines.diffusion...` without an install step.
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["engines"]
+addopts = "-q"

@@ -271,8 +271,9 @@ new session:
   old, never edit history).
 
 The immediate build target is in the active project plan's "Immediate next step"
-section — currently `docs/plans/steel-production.md` (Phase 1a: build & freeze
-the diffusion/heat solver).
+section — currently `docs/plans/steel-production.md`. Phase 1a (the diffusion/heat
+spine) is **built & frozen** — `engines/diffusion/CONTRACT.md` is the first sealed
+engine contract; next is Phase 1b (Fe-C equilibrium).
 
 ---
 
