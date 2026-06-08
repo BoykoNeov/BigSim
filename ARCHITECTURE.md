@@ -250,6 +250,9 @@ per-project plan (in `docs/plans/`) must specify:
 6. **Terms-of-use status** — usually "clean per §9"; flag any dataset that needs
    a license check.
 7. **Test runner** — the single command that verifies the whole project cheaply.
+8. **Visualization & UX** — how the sim is shown and explored: the universal
+   figure floor, the interactive surface it needs (notebook and/or thin web app),
+   and which *mechanism* the visuals are designed to reveal (§12).
 
 ---
 
@@ -270,3 +273,34 @@ new session:
 The immediate build target is in the active project plan's "Immediate next step"
 section — currently `docs/plans/steel-production.md` (Phase 1a: build & freeze
 the diffusion/heat solver).
+
+---
+
+## 12. Visualization & UX
+
+Education and experimentation (§1) require that every simulator can be *seen* and
+*explored*. Visualization is a program-level shared concern, governed by the same
+discipline as the solver toolkit. Full rationale + alternatives: ADR
+`docs/decisions/0002-visualization-and-ux.md`.
+
+1. **Separate compute from render.** Engines never import a plotting library; the
+   viz layer consumes the same plain data (arrays / numeric records) the
+   validation tests and any compiled reimplementation consume. The array-out
+   contract (ADR 0001) serves all three.
+2. **Visualization is never in the correctness path.** A figure consumes
+   already-validated data; it is never evidence of validity. Test the numbers
+   (§7), then draw them — the guard against "looks plausible ⇒ correct."
+3. **A shared `viz/` toolkit, peer to `engines/`,** of reusable primitives
+   (line/series, 2-D field/heatmap, time-animation, sweep-comparison grid,
+   annotated overlay), promoted from project-local by rule-of-three (§6).
+4. **Progressive enhancement** (mirrors the phasing doctrine): a universal
+   *matplotlib static-figure floor* (the banked artifact — testable, zero-deploy)
+   → *interactive* notebooks (ipywidgets) and/or a thin Streamlit/Gradio app for
+   slider-driven what-ifs (cheap because compute is light by design) →
+   *selective* Plotly / web / WebGL only where a sim's payoff demands it.
+5. **Visualize the mechanism, not just the output** — design views to reveal
+   *why* (a cooling path traversing the TTT C-curve), per target #1.
+
+**The floor is universal; the interactive surface is per-need.** The toolkit
+supports both notebook and web-app targets, but each project builds only the
+interactive surface its pedagogy calls for — not mandatorily both.

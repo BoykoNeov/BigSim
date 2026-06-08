@@ -46,3 +46,9 @@ Python + NumPy/SciPy by default, with a documented path to compiled kernels
 (Numba / Cython / a Rust/C++/Julia module behind a frozen contract) where a
 profiled hotspot justifies it. See
 [ADR 0001](docs/decisions/0001-language-and-performance.md).
+
+**Visualization** is a separate, progressively-enhanced layer — a universal
+matplotlib figure floor, interactive notebooks and thin Streamlit apps for
+what-ifs, and selective web/3-D where it pays off — that consumes headless
+engine data and is never part of the correctness story. See
+[ADR 0002](docs/decisions/0002-visualization-and-ux.md).
