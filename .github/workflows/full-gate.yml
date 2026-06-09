@@ -1,0 +1,102 @@
+# Full-gate CI — runs the canonical full pytest suite (all 248, incl. the
+# live-solver / notebook-kernel tests) on every push.
+#
+# This is the mitigation the test-execution policy (docs/decisions/0003) names but
+# deliberately did not build locally. Its Amendment (2026-06-09) moved the routine
+# *local* gate to the fast lane (`pytest -m "not slow"`, ~8 s) and stated, plainly,
+# that the cost of that is the live-CALPHAD tests + the known multicomponent flake +
+# (once a 2nd project lands) cross-project regressions now "run ~never unless
+# something forces the full gate. … its correct home is CI running the full gate on
+# push, off the developer's critical path." This workflow is that home.
+#
+# Design notes (the non-obvious choices):
+#
+#   * Python 3.12, not 3.14 (the local dev version). pycalphad pins `symengine<0.14`,
+#     and only symengine 0.14.1 ships a 3.14 wheel — so 3.14 needs the manual
+#     two-step install dance documented in pyproject.toml's [calphad] note, and 3.13
+#     risks a wheel gap too. On 3.12 a plain `pip install -e .[calphad]` resolves
+#     normally. Trade-off accepted: CI won't catch a 3.14-specific regression in the
+#     slow tests; the local fast lane runs on 3.14, and the dance isn't worth it here.
+#
+#   * Silent-skip is the dominant failure mode of a full-gate that exists to run the
+#     OPTIONAL stacks. Every optional-stack test is importorskip / skipif, so a
+#     fat-fingered install line, a missing Jupyter kernelspec, or a missing steel TDB
+#     makes those tests SKIP, not fail — a green run that quietly tested far fewer
+#     than 248. Three guards below defend the count: (1) a post-install import check
+#     that fails LOUDLY if any extra is absent; (2) explicit kernelspec registration
+#     (pip install ipykernel does NOT register one); (3) the TDB provisioning step.
+#     `pytest -rs` then prints every skip reason into the run log so a new silent skip
+#     is caught by eyeballing one log.
+#
+#   * The ODbL steel TDB (mc_fe) is downloaded at CI time, not committed (repo hygiene,
+#     plan §6 / .gitignore covers *.tdb + data/). It is required by the multicomponent
+#     live test — which is the KNOWN, non-deterministic flake the ADR's Open Issue
+#     tracks. Per the Amendment that flake's home is exactly here ("a full-gate-visible
+#     flake"), so it runs and is allowed to be visible — intentional, not a bug. If the
+#     intermittent red becomes noisy, the documented softener is pytest-rerunfailures
+#     on the slow set (not best-effort-skipping the TDB, which would dodge the very
+#     test this gate exists to run).
+
+name: full-gate
+
+on:
+  push:
+  workflow_dispatch:
+
+# A newer push to the same ref supersedes an in-flight run.
+concurrency:
+  group: full-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install BigSim with every optional stack
+        # The full gate needs ALL extras: viz (matplotlib figures), notebook
+        # (nbclient/nbformat/ipykernel/ipywidgets), app (streamlit), calphad (pycalphad).
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test,viz,notebook,app,calphad]"
+
+      - name: Fail loudly if any optional stack is missing
+        # Guards against a silently-incomplete install: importorskip would otherwise
+        # turn a missing extra into a green skip, not a red failure.
+        run: >
+          python -c "import importlib.util as u;
+          mods=['numpy','scipy','pytest','matplotlib','nbformat','nbclient','ipykernel','ipywidgets','streamlit','pycalphad'];
+          miss=[m for m in mods if u.find_spec(m) is None];
+          assert not miss, f'missing optional stacks: {miss}';
+          print('all optional stacks present:', mods)"
+
+      - name: Register a Jupyter kernelspec
+        # `pip install ipykernel` does NOT register a kernelspec; the notebook test
+        # looks for one named 'python3' and SKIPS without it. This makes it run.
+        run: python -m ipykernel install --user --name python3
+
+      - name: Cache the ODbL steel TDB (mc_fe)
+        id: tdb-cache
+        uses: actions/cache@v4
+        with:
+          path: data/tdb
+          key: mc-fe-v2.060
+
+      - name: Download the ODbL steel TDB (cache miss only)
+        if: steps.tdb-cache.outputs.cache-hit != 'true'
+        # Openly licensed (ODbL 1.0); downloaded at CI time, never committed. Required
+        # by the multicomponent live test (else it skips). Writes to data/tdb/, the
+        # default location default_steel_database_path() looks up.
+        run: python -c "from projects.steel.calphad_backend import download_mc_fe; print(download_mc_fe())"
+
+      - name: Full gate — all 248 tests (incl. live-solver / kernel)
+        # Bare pytest = the canonical full gate. -rs prints every skip reason so a
+        # silent-skip regression is visible in this log.
+        run: python -m pytest -rs

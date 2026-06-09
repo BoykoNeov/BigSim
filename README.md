@@ -1,5 +1,7 @@
 # BigSim — Educational Simulator Program
 
+[![full-gate](https://github.com/BoykoNeov/BigSim/actions/workflows/full-gate.yml/badge.svg)](https://github.com/BoykoNeov/BigSim/actions/workflows/full-gate.yml)
+
 A suite of educational, interactive, experimentation-focused
 physics / engineering / science simulators, built on a small set of shared,
 separately-validated solver engines.
