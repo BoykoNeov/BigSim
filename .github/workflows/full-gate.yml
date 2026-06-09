@@ -65,7 +65,9 @@ jobs:
 
       - name: Install BigSim with every optional stack
         # The full gate needs ALL extras: viz (matplotlib figures), notebook
-        # (nbclient/nbformat/ipykernel/ipywidgets), app (streamlit), calphad (pycalphad).
+        # (nbclient/nbformat/ipykernel/ipywidgets — plus jupyterlab, which rides along but is
+        # editor-only: no test imports it, so it is intentionally absent from the import-presence
+        # guard below), app (streamlit), calphad (pycalphad).
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test,viz,notebook,app,calphad]"
