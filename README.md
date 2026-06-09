@@ -41,7 +41,7 @@ app for Steel (the flagship):
 
 ```powershell
 pip install -e .[viz,notebook]
-jupyter lab projects/steel/steel.ipynb      # narrated sliders: %C, grade, quench, section, temper
+jupyter lab projects/steel/steel.ipynb      # sliders: carbon, alloy composition (C/Mn/Cr/Mo), quench, section, temper → microstructure
 jupyter lab projects/chip/chip.ipynb        # per-phase sliders: diffusion, oxide, litho → V_t
 
 pip install -e .[viz,app]
