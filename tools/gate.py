@@ -48,6 +48,10 @@ import sys
 GATES: dict[str, list[str]] = {
     "steel": ["engines/diffusion"],
     "chip": ["engines/diffusion"],
+    # Planet Phase 1 reuses only the frozen diffusion spine (the EBM's latitudinal heat transport).
+    # engines/fluid joins this `uses` entry in Phase 3, when circulation.py first imports it — making
+    # planet the manifest's first genuinely multi-engine row (ADR 0003 Successor / plan §7).
+    "planet": ["engines/diffusion"],
 }
 
 

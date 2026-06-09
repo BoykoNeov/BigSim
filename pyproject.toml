@@ -27,12 +27,14 @@ test = ["pytest>=7.0"]
 # notebooks) needs this. Install with `pip install -e .[viz]`.
 viz = ["matplotlib>=3.7"]
 # The teaching notebooks (Steel plan §9 slice 1 = steel.ipynb; Microchip §9 = chip.ipynb) are
-# opt-in: only those notebooks and their execution smoke-tests (tests/test_steel_notebook.py,
-# tests/test_chip_notebook.py) need ipywidgets (the live sliders) + the nbclient/nbformat/ipykernel
-# machinery that runs the notebooks headless. matplotlib stays in [viz], so the full runnable combo
-# is `pip install -e .[viz,notebook]`; the committed suite stays notebook-free (each smoke-test is
-# slow-marked and importorskip/kernelspec-gated).
-notebook = ["ipywidgets>=8", "nbclient", "nbformat", "ipykernel"]
+# opt-in. This extra carries two things: (1) jupyterlab — the interactive frontend a human opens
+# the notebook in (`jupyter lab projects/.../X.ipynb`); and (2) the headless run stack — ipywidgets
+# (the live sliders) + nbclient/nbformat/ipykernel — which the execution smoke-tests
+# (tests/test_steel_notebook.py, tests/test_chip_notebook.py) use to run the notebooks without a
+# browser. matplotlib stays in [viz], so the full runnable combo is `pip install -e .[viz,notebook]`.
+# The committed suite stays notebook-free regardless (each smoke-test is slow-marked and
+# importorskip/kernelspec-gated, and none import jupyterlab — it is editor-only, not test-required).
+notebook = ["jupyterlab>=4", "ipywidgets>=8", "nbclient", "nbformat", "ipykernel"]
 # The Streamlit what-if app (Steel plan §9, slice 2) is opt-in: only projects/steel/app.py
 # (the shareable slider UI) needs streamlit. Its compute helpers are pure sweep re-composition
 # (streamlit/matplotlib-free), so tests/test_app.py stays in the always-green committed suite;
@@ -51,6 +53,13 @@ app = ["streamlit>=1.30"]
 #       pip install xarray pint tinydb runtype pandas
 #   (On Python <3.14 a plain `pip install -e .[calphad]` resolves normally.)
 calphad = ["pycalphad>=0.11"]
+# Climate reference is opt-in (Planet Phase 1): only the live climlab cross-check
+# (projects/planet/climate_reference.py + its slow test) needs climlab. The committed Phase-1
+# tests validate the EBM against analytic anchors + a frozen reference table and stay climlab-free;
+# climlab is consumed as a reference tool (the pycalphad pattern), never copied. Install with
+# `pip install -e .[climate]`. The live cross-check test is slow-marked + importorskip-gated, so a
+# clean checkout skips it.
+climate = ["climlab>=0.8"]
 
 # Single-command test runner config (ARCHITECTURE.md §6 / steel plan §7).
 # `pythonpath = ["."]` puts the repo root on sys.path so tests import the
