@@ -287,8 +287,9 @@ new session:
 
 **All three project plans are now written** (`docs/plans/steel-production.md`,
 `docs/plans/microchip-fabrication.md`, `docs/plans/planet-earth-system.md`); the first two are
-fully built, and **Planet (#3) has Phase 1 built** (the EBM & Snowball bifurcation — the
-diffusion spine's third reuse, as a sphere's latitudinal heat transport); Phases 2–4 pending.
+fully built, and **Planet (#3) has Phases 1–2 built** (the EBM & Snowball bifurcation, then the
+climate→biome map — the diffusion spine's third reuse, as a sphere's latitudinal heat transport);
+Phases 3–4 pending.
 **Steel is complete through its planned phases (1–4):** 1a (diffusion/heat spine) **built & frozen** —
 `engines/diffusion/CONTRACT.md`, the first sealed engine contract; 1b/1c (Fe-C
 equilibrium + transformation kinetics + the four-curves anchor demo); 2a–2c (the
@@ -305,26 +306,31 @@ what-if harness (a *pure re-composition* of the validated chain, validated as *h
 correctness) + the **`steel.ipynb` teaching notebook** (slice 1, an ipywidgets thin skin)
 + the **`app.py` Streamlit app** (slice 2, a three-layer thin skin — streamlit/matplotlib-free
 compute helpers, lazy figure builders, a paper-thin `main()`). **All of Steel's planned work
-(Phases 1–4 + the §9 flagship surface) is done.** Full suite **373 green** (Steel + Microchip +
-Planet Phase 1; +1 live-climlab cross-check skipped without the `[climate]` extra) — the canonical
+(Phases 1–4 + the §9 flagship surface) is done.** Full suite **412 green** (Steel + Microchip +
+Planet Phases 1–2; +1 live-climlab cross-check skipped without the `[climate]` extra) — the canonical
 count, verified at the *exceptional* full-gate runs (ADR 0003); the **routine** commit gate is the
-fast `pytest -m "not slow"` (362 in ~13 s, the slow live-CALPHAD/notebook/kernel/sweep tests deselected).
+fast `pytest -m "not slow"` (398 in ~13 s, the slow live-CALPHAD/notebook/kernel/sweep tests deselected).
 
 **Microchip is also complete** (`docs/plans/microchip-fabrication.md`, per-project plan #2).
 Chip was the **first consumer of the frozen `engines/diffusion` spine** (it builds no new shared
 engine): all four phases — dopant diffusion & the pn junction (direct spine reuse, mass mode —
 *the* proof the spine reuses), Deal–Grove oxidation, the Abbe aerial-image litho module, and the
 compact process→device MOS `V_t` model — are built, closing a process→device loop, with full
-2-D/3-D TCAD + rigorous EMF litho the named ceiling. **Planet (#3, the capstone) now has Phase 1
-built** (`docs/plans/planet-earth-system.md`): the latitudinal EBM & the Snowball bifurcation — the
-diffusion spine reused a third time (heat transport on the sphere) with the state-dependent radiation
-**Strang-split around the frozen engine** (the Jominy idiom), banking a complete planet-scale artifact
-(the Snowball hysteresis loop: present-day Earth at ~73° ice line freezes over at ~8 % solar dimming
-and re-melts only ~580 W/m² brighter). Phases 2–4 are pending. Planet is the first project to build a
+2-D/3-D TCAD + rigorous EMF litho the named ceiling. **Planet (#3, the capstone) now has Phases 1–2
+built** (`docs/plans/planet-earth-system.md`): **Phase 1** is the latitudinal EBM & the Snowball
+bifurcation — the diffusion spine reused a third time (heat transport on the sphere) with the
+state-dependent radiation **Strang-split around the frozen engine** (the Jominy idiom), banking the
+Snowball hysteresis loop (present-day Earth at ~73° ice line freezes over at ~8 % solar dimming and
+re-melts only ~580 W/m² brighter); **Phase 2** banks the payoff *early* (the user's locked scope
+decision) — a diagnostic precip parameterization + an original Whittaker `(T,P)→biome` partition map
+the climate to **bands of life** (equator→pole: rain forest → savanna → desert/grassland → temperate
+forest → boreal → tundra), which **migrate poleward as a CO₂ knob warms the planet** — no new engine,
+project-local reuse of the EBM only. Phases 3–4 (the new shallow-water engine, the coupler) are
+pending. Planet is the first project to build a
 *second* shared engine (fluid/PDE shallow-water, to be frozen in its Phase 3) and the first to give
 the per-project gate manifest a genuinely distinct, multi-engine `uses` entry (`{diffusion, fluid}` —
-single-engine `{diffusion}` through Phase 1). Four scope decisions are locked in the plan: biomes
-banked early (the payoff before the new engine), a one-way coupler in v1, v1 = "rung 0" with the
+single-engine `{diffusion}` through Phases 1–2). Four scope decisions are locked in the plan: biomes
+banked early (**done** — the payoff before the new engine), a one-way coupler in v1, v1 = "rung 0" with the
 **GCM staircase documented** as the §5 growth axis, and a deep-end interactive planet map as the
 chosen viz surface.
 

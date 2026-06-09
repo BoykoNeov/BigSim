@@ -88,7 +88,7 @@ and frozen in Steel is the spine the other two inherit.
 
 ## Status
 
-**The shared spine is frozen, the first two projects are complete, and the Earth-system capstone is under way (Phase 1 built).**
+**The shared spine is frozen, the first two projects are complete, and the Earth-system capstone is under way (Phases 1–2 built).**
 
 - **Engine — diffusion/heat (the spine):** built and **frozen** behind
   [`engines/diffusion/CONTRACT.md`](engines/diffusion/CONTRACT.md) — the erfc-validated,
@@ -102,15 +102,19 @@ and frozen in Steel is the spine the other two inherit.
   → Deal–Grove oxidation → aerial-image lithography → compact MOS threshold voltage, plus an
   interactive `chip.ipynb` (per-phase sliders → V_t); the first consumer of the frozen spine
   (it builds no new engine). See [`projects/chip/README.md`](projects/chip/README.md).
-- **Planet (the Earth-system capstone) — Phase 1 built** (the latitudinal energy-balance model & the
-  Snowball bifurcation): the diffusion spine reuses a **third** time as a sphere's latitudinal heat
-  transport, with the radiation **Strang-split** around it (the Jominy idiom). One knob (the solar
-  constant) traces a **Snowball hysteresis** — present-day Earth (ice line ~73°) freezes over at ~8 %
-  dimming and re-melts only ~580 W/m² brighter. Phases 2–4 (biomes, the new shallow-water engine, the
-  coupler) are pending. See [`projects/planet/README.md`](projects/planet/README.md).
+- **Planet (the Earth-system capstone) — Phases 1–2 built.** *Phase 1* (the latitudinal
+  energy-balance model & the Snowball bifurcation): the diffusion spine reuses a **third** time as a
+  sphere's latitudinal heat transport, with the radiation **Strang-split** around it (the Jominy
+  idiom); one knob (the solar constant) traces a **Snowball hysteresis** — present-day Earth (ice line
+  ~73°) freezes over at ~8 % dimming and re-melts only ~580 W/m² brighter. *Phase 2* (the payoff,
+  banked early): a diagnostic precipitation field + an original Whittaker `(T,P)→biome` classifier
+  map the climate to **bands of life** (equator→pole: rain forest → savanna → desert/grassland →
+  temperate forest → boreal → tundra) that **migrate poleward as a CO₂ knob warms the planet**.
+  Phases 3–4 (the new shallow-water engine, the coupler) are pending.
+  See [`projects/planet/README.md`](projects/planet/README.md).
 
-Ten banked figures live in [`docs/figures/`](docs/figures/). The suite is **373 tests**, all
-green (plus 1 live-climlab cross-check skipped unless the `[climate]` extra is installed): **362 run
+Eleven banked figures live in [`docs/figures/`](docs/figures/). The suite is **413 tests**, all
+green (plus 1 live-climlab cross-check skipped unless the `[climate]` extra is installed): **398 run
 in the ~13 s fast lane** (`./run_tests.ps1 -m "not slow"`), with the rest `slow`
 live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
