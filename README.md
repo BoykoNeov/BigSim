@@ -41,7 +41,7 @@ app for Steel (the flagship):
 
 ```powershell
 pip install -e .[viz,notebook]
-jupyter lab projects/steel/steel.ipynb      # sliders: carbon, alloy composition (C/Mn/Cr/Mo), quench, section, temper → microstructure
+jupyter lab projects/steel/steel.ipynb      # sliders: carbon, alloy (C/Mn/Cr/Mo), quench, section, temper, austenitizing soak → microstructure, hardness, grain → yield/DBTT
 jupyter lab projects/chip/chip.ipynb        # per-phase sliders: diffusion, oxide, litho → V_t
 
 pip install -e .[viz,app]
@@ -117,9 +117,9 @@ and frozen in Steel is the spine the other two inherit.
   are pending. See [`projects/planet/README.md`](projects/planet/README.md).
 
 Eleven banked figures live in [`docs/figures/`](docs/figures/), plus an **interactive globe**
-(`planet-map.html`, the deep-end map's first version). The suite is **470 tests**, all green (the
+(`planet-map.html`, the deep-end map's first version). The suite is **474 tests**, all green (the
 live-climlab cross-check skips without the `[climate]` extra, and the Plotly map render smoke-tests
-skip without `[webviz]`): **455 run in the ~15 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
+skip without `[webviz]`): **458 run in the ~15 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
 the rest `slow` live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
 
