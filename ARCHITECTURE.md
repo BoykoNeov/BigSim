@@ -283,16 +283,22 @@ case-hardening — the mass-mode face of the spine); and **Phase 4** —
 parametrized chords for emergent Gibbs-energy-minimised boundaries and extends to
 multicomponent low-alloy steels, with a frozen reference table keeping its validation
 triad green without the optional dependency or any committed database. The
-**experimentation surface** (plan §9) is now **begun**: `sweep.py` — the headless
-sweep/what-if harness (a *pure re-composition* of the validated chain over the cooling-rate
-and composition axes, validated as *harness* correctness) + `demo_sweep.py` and the banked
-`docs/figures/steel-sweep.png` — is **built**, and its first interactive layer, the
-**`steel.ipynb` teaching notebook** (§9 slice 1: an ipywidgets *thin skin* on the harness,
-executed clean by a subprocess smoke-test), is **built**; the **`app.py` Streamlit** app (slice 2)
-remains. Full suite **235 green** (226 without the optional pycalphad/viz/notebook stack).
-**Next:** finish the experimentation surface's last interactive layer (`app.py`), or — per the
-build order (§4) — begin **Microchip**, which first reuses the frozen `engines/diffusion` spine
-(dopant profiles = the carbon-diffusion code).
+**experimentation surface** (plan §9) is **complete (3/3)**: the headless `sweep.py`
+what-if harness (a *pure re-composition* of the validated chain, validated as *harness*
+correctness) + the **`steel.ipynb` teaching notebook** (slice 1, an ipywidgets thin skin)
++ the **`app.py` Streamlit app** (slice 2, a three-layer thin skin — streamlit/matplotlib-free
+compute helpers, lazy figure builders, a paper-thin `main()`). **All of Steel's planned work
+(Phases 1–4 + the §9 flagship surface) is done.** Full suite **248 green** (234 without the
+optional pycalphad/viz/notebook/app stack).
+
+**The active build target has moved to Microchip** (`docs/plans/microchip-fabrication.md`, the
+per-project plan #2 — written 2026-06-09). Chip is the **first consumer of the frozen
+`engines/diffusion` spine** (it builds no new shared engine): four phases — dopant diffusion &
+the pn junction (direct spine reuse, mass mode — *the* proof the spine reuses), Deal–Grove
+oxidation, the Abbe aerial-image litho module, and a compact process→device model — ending at a
+process→device loop, with full 2-D/3-D TCAD + rigorous EMF litho as the named ceiling. **Next:**
+Microchip **Phase 1a** (dopant `erfc`/Gaussian profiles → junction depth + sheet resistance),
+the low-risk spine reuse that opens the project.
 
 ---
 
