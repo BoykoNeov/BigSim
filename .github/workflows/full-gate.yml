@@ -1,5 +1,5 @@
 # Full-gate CI — runs the canonical full pytest suite (all 248, incl. the
-# live-solver / notebook-kernel tests) on every push.
+# live-solver / notebook-kernel tests) on every push and pull request.
 #
 # This is the mitigation the test-execution policy (docs/decisions/0003) names but
 # deliberately did not build locally. Its Amendment (2026-06-09) moved the routine
@@ -41,6 +41,9 @@ name: full-gate
 
 on:
   push:
+  # Also gate pull requests pre-merge — BigSim is public, so a PR (incl. from a fork)
+  # must pass the full gate before it can land, not only after.
+  pull_request:
   workflow_dispatch:
 
 # A newer push to the same ref supersedes an in-flight run.
