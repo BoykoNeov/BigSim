@@ -354,6 +354,12 @@ the Planet interactive map.
 3. **A shared `viz/` toolkit, peer to `engines/`,** of reusable primitives
    (line/series, 2-D field/heatmap, time-animation, sweep-comparison grid,
    annotated overlay), promoted from project-local by rule-of-three (§6).
+   **Status (2026-06-09): not yet built — deliberately.** With three `plots.py`
+   (steel/chip/planet) the rule-of-three holds *by count* but not *by substance* —
+   they share conventions and styling, not copy-pasted code (and time-animation exists
+   nowhere). Promotion is deferred (a thin extraction is the leaned-to step, unbuilt);
+   the Planet interactive-map layer registry (ADR 0004) is the awaited third consumer
+   that will earn it. See ADR 0002's status note.
 4. **Progressive enhancement** (mirrors the phasing doctrine): a universal
    *matplotlib static-figure floor* (the banked artifact — testable, zero-deploy)
    → *interactive* notebooks (ipywidgets) and/or a thin Streamlit/Gradio app for
