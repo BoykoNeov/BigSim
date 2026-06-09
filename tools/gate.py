@@ -40,18 +40,18 @@ import subprocess
 import sys
 
 # The manifest: project -> the shared/engine modules it uses (repo-relative dirs).
-# Both current projects reuse the single frozen diffusion spine (engines/diffusion) —
-# Steel via jominy/carburize, Microchip via diffusion_dopant — so `uses` is identical
-# today. Microchip is a second *row*, not yet a second distinct *value*: the manifest's
-# discriminating feature stays unvalidated until a project uses a different module set
-# (ADR 0003 Successor caveat). Keep this minimal accordingly.
+# Steel (jominy/carburize) and Microchip (diffusion_dopant) reuse only the frozen diffusion
+# spine. Planet is the FIRST genuinely multi-engine row: its EBM reuses engines/diffusion
+# (latitudinal heat transport) AND its circulation.py reuses engines/fluid (the shallow-water
+# engine built & frozen in Phase 3) — the multi-engine `uses` case the per-project gate was
+# designed to validate (ADR 0003 Successor / plan §7). A `planet` commit therefore runs both
+# engines' seals; a Steel/Chip commit still need not run engines/fluid. The hand-declared
+# manifest is kept honest by the import-drift guard (tools/tests/test_gate.py), now live with
+# the second engine that finally gives it something to discriminate.
 GATES: dict[str, list[str]] = {
     "steel": ["engines/diffusion"],
     "chip": ["engines/diffusion"],
-    # Planet Phase 1 reuses only the frozen diffusion spine (the EBM's latitudinal heat transport).
-    # engines/fluid joins this `uses` entry in Phase 3, when circulation.py first imports it — making
-    # planet the manifest's first genuinely multi-engine row (ADR 0003 Successor / plan §7).
-    "planet": ["engines/diffusion"],
+    "planet": ["engines/diffusion", "engines/fluid"],
 }
 
 

@@ -104,8 +104,8 @@ first three; the rest serve the wider portfolio.
 
 | Engine | Used by (trio) | Used by (portfolio) | Validation |
 |---|---|---|---|
-| **Diffusion/heat (Fick/erfc)** — the spine of the trio | steel, chip, planet | landscape, groundwater, sediment, building-heat | erfc/Gaussian exact profiles |
-| **Fluid/PDE (NS → shallow-water; wave eq)** | planet | traffic, seismic, glacier, acoustics | geostrophic balance, conservation, known wave speeds |
+| **Diffusion/heat (Fick/erfc)** — the spine of the trio **[built & frozen — Steel 1a]** | steel, chip, planet | landscape, groundwater, sediment, building-heat | erfc/Gaussian exact profiles |
+| **Fluid/PDE (shallow-water; C-grid, explicit)** **[built & frozen — Planet 3]** | planet | traffic, seismic, glacier, acoustics | geostrophic balance/adjustment, mass/PV conservation, wave speeds |
 | **ODE integrators (RK4/Verlet/symplectic)** | planet, steel (cooling) | jet, star, supernova, biology, fractals | energy drift, analytic limits |
 | Stiffness/FEM | — | dam, truss, earthquake building | exact statics |
 | N-body gravity (Barnes-Hut) | — | galaxy | conservation; vs. direct-sum |
@@ -328,11 +328,17 @@ forest → boreal → tundra), which **migrate poleward as a CO₂ knob warms th
 project-local reuse of the EBM only. The **deep-end interactive map is built** (`planetmap.py` +
 `planet_spec.py`, ADR 0004): its first version is the biome map — a Plotly globe painted from a
 **layer registry** with live S₀/CO₂/transport knobs, plus a **pin-the-schema** export/import whose
-**round-trip identity is the deep end's one real (non-smoke) test**. Phases 3–4 (the new shallow-water
-engine, the coupler) are pending. Planet is the first project to build a
-*second* shared engine (fluid/PDE shallow-water, to be frozen in its Phase 3) and the first to give
-the per-project gate manifest a genuinely distinct, multi-engine `uses` entry (`{diffusion, fluid}` —
-single-engine `{diffusion}` through Phases 1–2). Four scope decisions are locked in the plan: biomes
+**round-trip identity is the deep end's one real (non-smoke) test**. **Phase 3 is built**: the program's
+**second shared engine, `engines/fluid`** — a rotating shallow-water solver (Arakawa C-grid,
+vector-invariant, explicit SSP-RK3), deliberately a *different solver class* from the
+parabolic-implicit `engines/diffusion`, **built standalone and frozen behind
+`engines/fluid/CONTRACT.md`** before any coupling (validated against wave speeds, geostrophic
+adjustment/balance, and a *finite-amplitude* PV/enstrophy seal; mass machine-exact, energy/PV
+bounded). `projects/planet/circulation.py` is its first consumer (planetary β-plane, `L_R ≈ 960 km`).
+This makes `planet`'s gate `uses` the manifest's **first genuinely distinct, multi-engine** entry
+(`{diffusion, fluid}` — single-engine `{diffusion}` through Phases 1–2), and the **import-drift guard**
+deferred to engine #2 is now built and live. Phase 4 (the one-way EBM→circulation coupler) is pending.
+Four scope decisions are locked in the plan: biomes
 banked early (**done** — the payoff before the new engine), a one-way coupler in v1, v1 = "rung 0" with the
 **GCM staircase documented** as the §5 growth axis, and a deep-end interactive planet map as the
 chosen viz surface.
