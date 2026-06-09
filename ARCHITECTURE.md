@@ -261,7 +261,10 @@ per-project plan (in `docs/plans/`) must specify:
    fast `pytest -m "not slow"` (whole-repo, ~8 s); the full `pytest` (the tracked
    count) is run only in *exceptional* cases (shared-engine edit, root-config,
    release, CI); docs-only commits run no gate. Mark live-solver / kernel /
-   subprocess tests `slow`.
+   subprocess tests `slow`. Once 2+ projects exist, the routine gate is
+   per-project — `python -m tools.gate <project> -m "not slow"` runs a project's
+   own tests plus the tests of the modules it uses, from the `tools/gate.py`
+   manifest (ADR 0003 → *Successor*, built 2026-06-09).
 8. **Visualization & UX** — how the sim is shown and explored: the universal
    figure floor, the interactive surface it needs (notebook and/or thin web app),
    and which *mechanism* the visuals are designed to reveal (§12).

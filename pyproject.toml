@@ -57,10 +57,13 @@ calphad = ["pycalphad>=0.11"]
 # without an install step.
 #
 # Tiered gate (ADR 0003 — docs/decisions/0003-test-execution-policy.md):
+#   * Per-project   : `python -m tools.gate <name> -m "not slow"` → the routine gate
+#                       once a project is named (its own tests + the tests of the modules
+#                       it uses, per the tools/gate.py manifest). The ADR 0003 Successor.
 #   * Routine commit : `pytest -m "not slow"` → whole-repo fast lane (~8 s), incl.
 #                       the frozen-engine tests (the "used modules"). The gate before
-#                       an ordinary commit.
-#   * Full gate      : `pytest`               → everything (the tracked 248). Run only
+#                       an ordinary commit when the change spans projects.
+#   * Full gate      : `pytest`               → everything (the tracked suite). Run only
 #                       in EXCEPTIONAL cases: a shared engines/ edit, a root-config
 #                       change, a release, or CI.
 #   * Docs-only      : no gate.
@@ -69,7 +72,10 @@ calphad = ["pycalphad>=0.11"]
 # subprocess (the pycalphad solves, the notebook-kernel execution).
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["engines", "projects"]
+# `tools` collects the per-project gate's own self-check (tools/tests); the gate
+# manifest + runner live in tools/gate.py (not a shipped package — see pyproject's
+# packages.find, which includes only engines*/projects*).
+testpaths = ["engines", "projects", "tools"]
 addopts = "-q"
 markers = [
     "slow: drives a live external solver / kernel / subprocess; deselect in the inner loop with -m 'not slow' (ADR 0003)",
