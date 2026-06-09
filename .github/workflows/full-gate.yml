@@ -1,4 +1,4 @@
-# Full-gate CI — runs the canonical full pytest suite (all 248, incl. the
+# Full-gate CI — runs the canonical full pytest suite (every test, incl. the
 # live-solver / notebook-kernel tests) on every push and pull request.
 #
 # This is the mitigation the test-execution policy (docs/decisions/0003) names but
@@ -67,17 +67,19 @@ jobs:
         # The full gate needs ALL extras: viz (matplotlib figures), notebook
         # (nbclient/nbformat/ipykernel/ipywidgets — plus jupyterlab, which rides along but is
         # editor-only: no test imports it, so it is intentionally absent from the import-presence
-        # guard below), app (streamlit), calphad (pycalphad).
+        # guard below), app (streamlit), calphad (pycalphad), webviz (plotly + ipywidgets — the
+        # interactive planet map's render smoke-tests, importorskip-gated like the rest).
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[test,viz,notebook,app,calphad]"
+          pip install -e ".[test,viz,notebook,app,calphad,webviz]"
 
       - name: Fail loudly if any optional stack is missing
         # Guards against a silently-incomplete install: importorskip would otherwise
-        # turn a missing extra into a green skip, not a red failure.
+        # turn a missing extra into a green skip, not a red failure. (plotly = [webviz]:
+        # without it the planet-map render tests would skip silently, not fail.)
         run: >
           python -c "import importlib.util as u;
-          mods=['numpy','scipy','pytest','matplotlib','nbformat','nbclient','ipykernel','ipywidgets','streamlit','pycalphad'];
+          mods=['numpy','scipy','pytest','matplotlib','nbformat','nbclient','ipykernel','ipywidgets','streamlit','pycalphad','plotly'];
           miss=[m for m in mods if u.find_spec(m) is None];
           assert not miss, f'missing optional stacks: {miss}';
           print('all optional stacks present:', mods)"
@@ -101,7 +103,7 @@ jobs:
         # default location default_steel_database_path() looks up.
         run: python -c "from projects.steel.calphad_backend import download_mc_fe; print(download_mc_fe())"
 
-      - name: Full gate — all 248 tests (incl. live-solver / kernel)
+      - name: Full gate — the whole suite (incl. live-solver / kernel)
         # Bare pytest = the canonical full gate. -rs prints every skip reason so a
         # silent-skip regression is visible in this log.
         run: python -m pytest -rs

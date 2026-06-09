@@ -325,8 +325,11 @@ re-melts only ~580 W/m² brighter); **Phase 2** banks the payoff *early* (the us
 decision) — a diagnostic precip parameterization + an original Whittaker `(T,P)→biome` partition map
 the climate to **bands of life** (equator→pole: rain forest → savanna → desert/grassland → temperate
 forest → boreal → tundra), which **migrate poleward as a CO₂ knob warms the planet** — no new engine,
-project-local reuse of the EBM only. Phases 3–4 (the new shallow-water engine, the coupler) are
-pending. Planet is the first project to build a
+project-local reuse of the EBM only. The **deep-end interactive map is built** (`planetmap.py` +
+`planet_spec.py`, ADR 0004): its first version is the biome map — a Plotly globe painted from a
+**layer registry** with live S₀/CO₂/transport knobs, plus a **pin-the-schema** export/import whose
+**round-trip identity is the deep end's one real (non-smoke) test**. Phases 3–4 (the new shallow-water
+engine, the coupler) are pending. Planet is the first project to build a
 *second* shared engine (fluid/PDE shallow-water, to be frozen in its Phase 3) and the first to give
 the per-project gate manifest a genuinely distinct, multi-engine `uses` entry (`{diffusion, fluid}` —
 single-engine `{diffusion}` through Phases 1–2). Four scope decisions are locked in the plan: biomes
@@ -364,8 +367,10 @@ the Planet interactive map.
    (steel/chip/planet) the rule-of-three holds *by count* but not *by substance* —
    they share conventions and styling, not copy-pasted code (and time-animation exists
    nowhere). Promotion is deferred (a thin extraction is the leaned-to step, unbuilt);
-   the Planet interactive-map layer registry (ADR 0004) is the awaited third consumer
-   that will earn it. See ADR 0002's status note.
+   the Planet interactive-map layer registry (ADR 0004) is now **built** (`planetmap.py`)
+   but stays project-local — it is the third *consumer*, yet it shares the others' conventions,
+   not copy-pasted code, so it does not by itself trigger a substance-level rule-of-three.
+   See ADR 0002's status note.
 4. **Progressive enhancement** (mirrors the phasing doctrine): a universal
    *matplotlib static-figure floor* (the banked artifact — testable, zero-deploy)
    → *interactive* notebooks (ipywidgets) and/or a thin Streamlit/Gradio app for

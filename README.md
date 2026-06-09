@@ -110,13 +110,17 @@ and frozen in Steel is the spine the other two inherit.
   banked early): a diagnostic precipitation field + an original Whittaker `(T,P)→biome` classifier
   map the climate to **bands of life** (equator→pole: rain forest → savanna → desert/grassland →
   temperate forest → boreal → tundra) that **migrate poleward as a CO₂ knob warms the planet**.
-  Phases 3–4 (the new shallow-water engine, the coupler) are pending.
-  See [`projects/planet/README.md`](projects/planet/README.md).
+  The **deep-end interactive map** is built (`planetmap.py` + `planet_spec.py`, ADR 0004): its first
+  version is the biome map — a Plotly globe painted from a **layer registry** with live S₀/CO₂/transport
+  knobs (`docs/figures/planet-map.html`), plus a pin-the-schema export/import whose **round-trip
+  identity** is the deep end's one real test. Phases 3–4 (the new shallow-water engine, the coupler)
+  are pending. See [`projects/planet/README.md`](projects/planet/README.md).
 
-Eleven banked figures live in [`docs/figures/`](docs/figures/). The suite is **413 tests**, all
-green (plus 1 live-climlab cross-check skipped unless the `[climate]` extra is installed): **398 run
-in the ~13 s fast lane** (`./run_tests.ps1 -m "not slow"`), with the rest `slow`
-live-solver/kernel tests reserved for the full gate (the tiered policy,
+Eleven banked figures live in [`docs/figures/`](docs/figures/), plus an **interactive globe**
+(`planet-map.html`, the deep-end map's first version). The suite is **470 tests**, all green (the
+live-climlab cross-check skips without the `[climate]` extra, and the Plotly map render smoke-tests
+skip without `[webviz]`): **455 run in the ~15 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
+the rest `slow` live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
 
 ## Implementation

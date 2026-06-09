@@ -60,6 +60,16 @@ calphad = ["pycalphad>=0.11"]
 # `pip install -e .[climate]`. The live cross-check test is slow-marked + importorskip-gated, so a
 # clean checkout skips it.
 climate = ["climlab>=0.8"]
+# The interactive deep-end map is opt-in (Planet §9 / ADR 0004): only projects/planet/planetmap.py
+# (the Plotly globe + the ipywidgets live-slider loop) needs this. The layer registry, the layer
+# builders, and the planet-spec interchange schema (planet_spec.py) are NumPy-only, so their tests
+# — including the round-trip-identity test, the one *real* correctness property of the deep end —
+# stay in the always-green committed suite; the map's render smoke-tests are importorskip-gated on
+# plotly (fast — no kernel/subprocess, so NOT slow-marked). Install with `pip install -e .[webviz]`.
+# plotly alone covers the figure + the standalone HTML artifact (no server, no kaleido); ipywidgets
+# is only for the in-notebook live-slider loop (interactive_map()). matplotlib stays in [viz] (the
+# static floor) — the map never imports it.
+webviz = ["plotly>=5", "ipywidgets>=8"]
 
 # Single-command test runner config (ARCHITECTURE.md §6 / steel plan §7).
 # `pythonpath = ["."]` puts the repo root on sys.path so tests import the
