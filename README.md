@@ -102,7 +102,7 @@ and frozen in Steel is the spine the other two inherit.
   → Deal–Grove oxidation → aerial-image lithography → compact MOS threshold voltage, plus an
   interactive `chip.ipynb` (per-phase sliders → V_t); the first consumer of the frozen spine
   (it builds no new engine). See [`projects/chip/README.md`](projects/chip/README.md).
-- **Planet (the Earth-system capstone) — Phases 1–2 built.** *Phase 1* (the latitudinal
+- **Planet (the Earth-system capstone) — all four phases built; the capstone is complete.** *Phase 1* (the latitudinal
   energy-balance model & the Snowball bifurcation): the diffusion spine reuses a **third** time as a
   sphere's latitudinal heat transport, with the radiation **Strang-split** around it (the Jominy
   idiom); one knob (the solar constant) traces a **Snowball hysteresis** — present-day Earth (ice line
@@ -117,13 +117,19 @@ and frozen in Steel is the spine the other two inherit.
   engine, `engines/fluid`** — a rotating shallow-water solver (Arakawa C-grid, explicit) validated
   against wave speeds, geostrophic adjustment, and a finite-amplitude PV seal, then banked as a
   geostrophic-adjustment + westward-Rossby-wave demo; this is the first **multi-engine** gate row
-  (`{diffusion, fluid}`). Phase 4 (the one-way EBM→circulation coupler) is pending.
+  (`{diffusion, fluid}`). *Phase 4* (the one-way coupler — the capstone payoff) **couples the two
+  engines**: the EBM's meridional temperature gradient forces the dry shallow-water flow (thermal
+  relaxation + weak drag, split around the bare engine — the third reuse of the Jominy idiom) and a
+  **geostrophically-balanced westerly jet emerges** (~16.5 m/s @ ~42°) at the climate's gradient
+  maximum, flanked by the easterly return the doubly-periodic channel requires; the interactive map now
+  paints the jet as a `vector_overlay`. One-way / dry (two-way = rung 1, the `tracer` seam).
   See [`projects/planet/README.md`](projects/planet/README.md).
 
-Eleven banked figures live in [`docs/figures/`](docs/figures/), plus an **interactive globe**
-(`planet-map.html`, the deep-end map's first version). The suite is **474 tests**, all green (the
-live-climlab cross-check skips without the `[climate]` extra, and the Plotly map render smoke-tests
-skip without `[webviz]`): **458 run in the ~15 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
+Fourteen banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
+(`planet-map.html`, the deep-end biome map; `planet-coupler-map.html`, the emergent jet over the
+temperature field). The suite is **533 tests**, all green (the live-climlab cross-check skips without
+the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **503 run in the
+~15 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
 the rest `slow` live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
 
