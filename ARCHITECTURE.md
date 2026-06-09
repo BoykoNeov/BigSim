@@ -169,9 +169,10 @@ root-config change, a release, CI); docs-only commits run no gate — short
 contracts, and a per-session "load these files" pointer in the docs. The full
 gate's cost does not scale to every commit × N projects, so it is reserved, not
 default. Heaviness (a few live-solver/kernel tests) is split off by the `slow`
-marker; per-project path-scoping for breadth is deferred until the fast lane itself
-crosses ~30 s (leaning on freeze-before-reuse — a frozen engine's tests only re-run
-when that engine is edited).
+marker. This whole-repo gate is **interim**: the committed successor is a
+manifest-backed **per-project gate** (a commit runs only the tests concerning its
+project + the modules it uses), built once Microchip gives that mapping a second
+entry to validate (ADR 0003 → *Successor*).
 
 ---
 
