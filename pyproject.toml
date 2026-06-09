@@ -43,7 +43,19 @@ calphad = ["pycalphad>=0.11"]
 # `pythonpath = ["."]` puts the repo root on sys.path so tests import the
 # engines as `engines.diffusion...` (and projects as `projects.steel...`)
 # without an install step.
+#
+# Tiered gate (ADR 0003 — docs/decisions/0003-test-execution-policy.md):
+#   * Inner loop  : `pytest -m "not slow"`  → the pure/deterministic core (~10 s).
+#   * Commit gate : `pytest`                → everything, the tracked invariant.
+#   * Scoped dev  : `pytest projects/<name>` → just the module you're editing.
+# `slow` marks the handful of tests that drive a live external solver / kernel /
+# subprocess (the pycalphad solves, the notebook-kernel execution). Default `pytest`
+# stays the *full* gate so those heavyweight/flaky tests never rot silently between
+# commits; `-m "not slow"` is the explicit fast lane.
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["engines", "projects"]
 addopts = "-q"
+markers = [
+    "slow: drives a live external solver / kernel / subprocess; deselect in the inner loop with -m 'not slow' (ADR 0003)",
+]
