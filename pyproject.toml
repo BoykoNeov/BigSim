@@ -26,11 +26,12 @@ test = ["pytest>=7.0"]
 # headless/matplotlib-free; only the render layer (projects/steel/plots.py, demos,
 # notebooks) needs this. Install with `pip install -e .[viz]`.
 viz = ["matplotlib>=3.7"]
-# The teaching notebook (Steel plan §9, slice 1) is opt-in: only projects/steel/steel.ipynb
-# and its execution smoke-test (tests/test_steel_notebook.py) need ipywidgets (the live
-# sliders) + the nbclient/nbformat/ipykernel machinery that runs the notebook headless.
-# matplotlib stays in [viz], so the full runnable combo is `pip install -e .[viz,notebook]`;
-# the committed suite stays notebook-free (the smoke-test is importorskip/kernelspec-gated).
+# The teaching notebooks (Steel plan §9 slice 1 = steel.ipynb; Microchip §9 = chip.ipynb) are
+# opt-in: only those notebooks and their execution smoke-tests (tests/test_steel_notebook.py,
+# tests/test_chip_notebook.py) need ipywidgets (the live sliders) + the nbclient/nbformat/ipykernel
+# machinery that runs the notebooks headless. matplotlib stays in [viz], so the full runnable combo
+# is `pip install -e .[viz,notebook]`; the committed suite stays notebook-free (each smoke-test is
+# slow-marked and importorskip/kernelspec-gated).
 notebook = ["ipywidgets>=8", "nbclient", "nbformat", "ipykernel"]
 # The Streamlit what-if app (Steel plan §9, slice 2) is opt-in: only projects/steel/app.py
 # (the shareable slider UI) needs streamlit. Its compute helpers are pure sweep re-composition

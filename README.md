@@ -11,6 +11,55 @@ that drive dramatic, counter-intuitive transitions, let users run sweeps and
 "what-ifs," and grow each simulator from a complete simple artifact toward a
 deep end — without chasing a research/compute wall.
 
+## Quickstart
+
+No build step is needed to *import* the code (the test config puts the repo root on
+`sys.path`), but the dependencies still are. Install the core stack, then add the optional
+extra for whichever surface you want:
+
+```powershell
+pip install -e .                  # core: numpy + scipy (compute + the headless test suite)
+pip install -e .[viz]             # + matplotlib — required to render any demo figure
+pip install -e .[viz,notebook]    # + ipywidgets/jupyter — the Steel teaching notebook
+pip install -e .[viz,app]         # + streamlit — the Steel what-if web app
+pip install -e .[calphad]         # + pycalphad — Steel's optional CALPHAD backend
+```
+
+**Run a simulator** — each demo prints a result and saves a figure to `docs/figures/`
+(needs `[viz]`). A representative few (each project's README lists them all):
+
+```powershell
+pip install -e .[viz]
+python -m projects.steel.demo_four_curves   # one steel, four quenches: pearlite → martensite
+python -m projects.steel.demo_jominy        # Jominy hardness vs depth, 1045 vs 4140
+python -m projects.chip.demo_oxidation      # Deal–Grove oxide growth, wet vs dry
+python -m projects.chip.demo_device         # the process → MOSFET threshold-voltage flow
+```
+
+**Explore interactively** — slider-driven teaching notebooks for both projects; a shareable web
+app for Steel (the flagship):
+
+```powershell
+pip install -e .[viz,notebook]
+jupyter lab projects/steel/steel.ipynb      # narrated sliders: %C, grade, quench, section, temper
+jupyter lab projects/chip/chip.ipynb        # per-phase sliders: diffusion, oxide, litho → V_t
+
+pip install -e .[viz,app]
+streamlit run projects/steel/app.py         # Steel only — the same what-ifs as a shareable web app
+```
+
+**Run the tests** (the tiered gate — [ADR 0003](docs/decisions/0003-test-execution-policy.md)):
+
+```powershell
+./run_tests.ps1 -m "not slow"     # routine fast lane — 338 tests, ~11 s
+./run_tests.ps1                   # full suite — 347 tests (exceptional: engine edit, release, CI)
+python -m tools.gate steel        # just one project + the modules it uses
+```
+
+> The CALPHAD backend (Steel Phase 4) needs pycalphad and, on Python 3.14, a documented
+> two-step install — see [`projects/steel/README.md`](projects/steel/README.md). The committed
+> test suite stays pycalphad-free, so none of the above requires it.
+
 ## How it's organized
 
 - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** — the program doctrine: invariants,
@@ -19,8 +68,9 @@ deep end — without chasing a research/compute wall.
   **Start here.**
 - **[`PORTFOLIO.md`](PORTFOLIO.md)** — the full catalog of candidate simulators
   (feasibility tier, simple→deep arc, validation anchor, shared engine).
-- **[`docs/plans/`](docs/plans/)** — per-project plans. First up:
-  [Steel production](docs/plans/steel-production.md).
+- **[`docs/plans/`](docs/plans/)** — per-project plans:
+  [Steel production](docs/plans/steel-production.md) (#1) and
+  [Microchip fabrication](docs/plans/microchip-fabrication.md) (#2).
 - **[`docs/decisions/`](docs/decisions/)** — architecture decision records (ADRs).
 
 ## The core idea
@@ -38,21 +88,26 @@ and frozen in Steel is the spine the other two inherit.
 
 ## Status
 
-Building — **Steel Phase 1 is complete** (the foundation) and **Phase 2 is underway**. The doctrine, catalog,
-first project plan, and ADRs are in place; the **first engine is built and frozen**
-(the erfc-validated 1-D diffusion/heat solver, `engines/diffusion/`, Steel Phase 1a
-— the spine the whole trio inherits, sealed behind its
-[`CONTRACT.md`](engines/diffusion/CONTRACT.md)); and steel's **Fe-C equilibrium**
-(1b) and **transformation kinetics** (1c — Avrami/TTT, Scheil additivity/CCT,
-Koistinen–Marburger + Andrews M_s) are built on top. The banked Phase-1 artifact:
-*one steel (AISI 1080), four cooling rates, soft pearlite → file-hard martensite*
-([`docs/figures/steel-four-curves.png`](docs/figures/steel-four-curves.png)). Full
-suite **147 green**. **Steel Phase 2 is underway**: the Jominy end-quench *spatial
-thermal* model (2a — first reuse of the heat solver, the transient fin equation) and
-the *alloy hardenability* C-curve shift (2b — Mn/Cr/Mo slide the TTT curve right, so
-deep-hardening 4140 stays martensitic far deeper into the bar than shallow 1045) are
-built; next is 2c (microstructure→hardness → the Jominy hardness curve + 1045/4140
-benchmark). Run the suite with `./run_tests.ps1`.
+**The shared spine is frozen and the first two projects are complete.**
+
+- **Engine — diffusion/heat (the spine):** built and **frozen** behind
+  [`engines/diffusion/CONTRACT.md`](engines/diffusion/CONTRACT.md) — the erfc-validated,
+  conservative 1-D parabolic solver (heat *and* mass mode) the whole trio inherits.
+- **Steel — complete** (Phases 1–4 + the experimentation surface): Fe-C equilibrium →
+  transformation kinetics → Jominy hardenability → structure→properties → tempering →
+  carburizing → an optional CALPHAD backend, plus a headless sweep harness, an interactive
+  teaching notebook, and a Streamlit what-if app.
+  See [`projects/steel/README.md`](projects/steel/README.md).
+- **Microchip — complete** (Phases 1–4 + a teaching notebook): dopant diffusion & the pn junction
+  → Deal–Grove oxidation → aerial-image lithography → compact MOS threshold voltage, plus an
+  interactive `chip.ipynb` (per-phase sliders → V_t); the first consumer of the frozen spine
+  (it builds no new engine). See [`projects/chip/README.md`](projects/chip/README.md).
+- **Next:** project #3 — the Earth-system / planet capstone (not yet started).
+
+Nine banked figures live in [`docs/figures/`](docs/figures/). The suite is **347 tests**, all
+green: **338 run in the ~11 s fast lane** (`./run_tests.ps1 -m "not slow"`), with 9 `slow`
+live-solver/kernel tests reserved for the full gate (the tiered policy,
+[ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
 
 ## Implementation
 

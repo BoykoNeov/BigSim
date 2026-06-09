@@ -285,9 +285,9 @@ new session:
   already be settled (and if it changes, append a new ADR that supersedes the
   old, never edit history).
 
-The immediate build target is in the active project plan's "Immediate next step"
-section — currently `docs/plans/steel-production.md`. **Steel is complete through its
-planned phases (1–4):** 1a (diffusion/heat spine) **built & frozen** —
+The first two project plans (`docs/plans/steel-production.md`,
+`docs/plans/microchip-fabrication.md`) are fully built; the next build target is project #3
+(planet), not yet planned. **Steel is complete through its planned phases (1–4):** 1a (diffusion/heat spine) **built & frozen** —
 `engines/diffusion/CONTRACT.md`, the first sealed engine contract; 1b/1c (Fe-C
 equilibrium + transformation kinetics + the four-curves anchor demo); 2a–2c (the
 Jominy spatial fin model, the alloy hardenability C-curve shift, and the
@@ -303,19 +303,20 @@ what-if harness (a *pure re-composition* of the validated chain, validated as *h
 correctness) + the **`steel.ipynb` teaching notebook** (slice 1, an ipywidgets thin skin)
 + the **`app.py` Streamlit app** (slice 2, a three-layer thin skin — streamlit/matplotlib-free
 compute helpers, lazy figure builders, a paper-thin `main()`). **All of Steel's planned work
-(Phases 1–4 + the §9 flagship surface) is done.** Full suite **248 green** (234 without the
-optional pycalphad/viz/notebook/app stack) — the canonical count, verified at the
-*exceptional* full-gate runs (ADR 0003); the **routine** commit gate is the fast
-`pytest -m "not slow"` (240 in ~8 s, the live-CALPHAD/notebook tests deselected).
+(Phases 1–4 + the §9 flagship surface) is done.** Full suite **347 green** (Steel + Microchip)
+— the canonical count, verified at the *exceptional* full-gate runs (ADR 0003); the **routine**
+commit gate is the fast `pytest -m "not slow"` (338 in ~11 s, the 9 live-CALPHAD/notebook/kernel
+tests deselected).
 
-**The active build target has moved to Microchip** (`docs/plans/microchip-fabrication.md`, the
-per-project plan #2 — written 2026-06-09). Chip is the **first consumer of the frozen
-`engines/diffusion` spine** (it builds no new shared engine): four phases — dopant diffusion &
-the pn junction (direct spine reuse, mass mode — *the* proof the spine reuses), Deal–Grove
-oxidation, the Abbe aerial-image litho module, and a compact process→device model — ending at a
-process→device loop, with full 2-D/3-D TCAD + rigorous EMF litho as the named ceiling. **Next:**
-Microchip **Phase 1a** (dopant `erfc`/Gaussian profiles → junction depth + sheet resistance),
-the low-risk spine reuse that opens the project.
+**Microchip is also complete** (`docs/plans/microchip-fabrication.md`, per-project plan #2).
+Chip was the **first consumer of the frozen `engines/diffusion` spine** (it builds no new shared
+engine): all four phases — dopant diffusion & the pn junction (direct spine reuse, mass mode —
+*the* proof the spine reuses), Deal–Grove oxidation, the Abbe aerial-image litho module, and the
+compact process→device MOS `V_t` model — are built, closing a process→device loop, with full
+2-D/3-D TCAD + rigorous EMF litho the named ceiling. **The active build target has moved to
+project #3, the Earth-system / planet capstone** (`PORTFOLIO.md`; not yet started) — the first
+project to need a *second* shared engine (fluid/PDE) and the first to give the per-project gate
+manifest a genuinely distinct `uses` entry.
 
 ---
 
