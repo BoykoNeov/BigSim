@@ -335,7 +335,14 @@ chosen viz surface.
 Education and experimentation (§1) require that every simulator can be *seen* and
 *explored*. Visualization is a program-level shared concern, governed by the same
 discipline as the solver toolkit. Full rationale + alternatives: ADR
-`docs/decisions/0002-visualization-and-ux.md`.
+`docs/decisions/0002-visualization-and-ux.md`. The **selective deep-end** (#4 below —
+interactive maps / 3-D views) carries its own doctrine in ADR
+`docs/decisions/0004-interactive-maps-and-state-interchange.md`: a **layer registry**
+(views grow by registering layers, not editing a renderer), a **tier-dependent
+interaction model** (live slider at light compute → launch-a-run up the staircase, with
+the renderer invariant either way), and a **pin-the-schema state-interchange** contract
+(export/import the layer stack; round-trip identity is a real test). First-instanced by
+the Planet interactive map.
 
 1. **Separate compute from render.** Engines never import a plotting library; the
    viz layer consumes the same plain data (arrays / numeric records) the
