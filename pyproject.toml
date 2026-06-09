@@ -1,3 +1,15 @@
+# Build config exists for ONE consumer: full-gate CI (`pip install -e .[…]` to pull the
+# optional stacks). Local dev never installs — pytest's `pythonpath = ["."]` (below) puts
+# the repo root on sys.path, so `engines.*` / `projects.*` import without a build step. The
+# flat layout has two top-level packages, which setuptools won't auto-discover, so name them
+# explicitly here (else `pip install -e .` fails with "Multiple top-level packages discovered").
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["engines*", "projects*"]
+
 [project]
 name = "bigsim"
 version = "0.1.0"
