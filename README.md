@@ -113,8 +113,12 @@ and frozen in Steel is the spine the other two inherit.
   The **deep-end interactive map** is built (`planetmap.py` + `planet_spec.py`, ADR 0004): its first
   version is the biome map — a Plotly globe painted from a **layer registry** with live S₀/CO₂/transport
   knobs (`docs/figures/planet-map.html`), plus a pin-the-schema export/import whose **round-trip
-  identity** is the deep end's one real test. Phases 3–4 (the new shallow-water engine, the coupler)
-  are pending. See [`projects/planet/README.md`](projects/planet/README.md).
+  identity** is the deep end's one real test. *Phase 3* builds & freezes the program's **second shared
+  engine, `engines/fluid`** — a rotating shallow-water solver (Arakawa C-grid, explicit) validated
+  against wave speeds, geostrophic adjustment, and a finite-amplitude PV seal, then banked as a
+  geostrophic-adjustment + westward-Rossby-wave demo; this is the first **multi-engine** gate row
+  (`{diffusion, fluid}`). Phase 4 (the one-way EBM→circulation coupler) is pending.
+  See [`projects/planet/README.md`](projects/planet/README.md).
 
 Eleven banked figures live in [`docs/figures/`](docs/figures/), plus an **interactive globe**
 (`planet-map.html`, the deep-end map's first version). The suite is **474 tests**, all green (the
