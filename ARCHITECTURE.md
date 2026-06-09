@@ -162,13 +162,16 @@ Three mechanisms do that work:
   matters. Plan to minimize the number of these.
 
 **Practical hygiene (applies to every repo):** small files, clear names, a
-**tiered test gate** (ADR 0003) — a fast inner loop `pytest -m "not slow"` for the
-pure/deterministic core, the bare `pytest` as the full commit gate, and
-`pytest projects/<name>` to scope to the module under edit — short contracts, and
-a per-session "load these files" pointer in the docs. As the portfolio grows,
-heaviness (a few live-solver/kernel tests) is split off by the `slow` marker;
-breadth (many modules) is scoped by path, leaning on freeze-before-reuse — a
-frozen engine's tests only re-run when that engine is edited.
+**tiered test gate** (ADR 0003) — the routine commit gate is the whole-repo fast
+lane `pytest -m "not slow"` (~8 s, including the frozen-engine "used modules"); the
+**full** `pytest` is run only in *exceptional* cases (a shared `engines/` edit, a
+root-config change, a release, CI); docs-only commits run no gate — short
+contracts, and a per-session "load these files" pointer in the docs. The full
+gate's cost does not scale to every commit × N projects, so it is reserved, not
+default. Heaviness (a few live-solver/kernel tests) is split off by the `slow`
+marker; per-project path-scoping for breadth is deferred until the fast lane itself
+crosses ~30 s (leaning on freeze-before-reuse — a frozen engine's tests only re-run
+when that engine is edited).
 
 ---
 
@@ -253,9 +256,10 @@ per-project plan (in `docs/plans/`) must specify:
    consequence it targets instead (§8).
 6. **Terms-of-use status** — usually "clean per §9"; flag any dataset that needs
    a license check.
-7. **Test runner** — the tiered gate (ADR 0003): a fast `pytest -m "not slow"`
-   inner loop, the bare `pytest` full commit gate (the tracked invariant), and
-   `pytest projects/<name>` to scope to one module. Mark live-solver / kernel /
+7. **Test runner** — the tiered gate (ADR 0003): the routine commit gate is the
+   fast `pytest -m "not slow"` (whole-repo, ~8 s); the full `pytest` (the tracked
+   count) is run only in *exceptional* cases (shared-engine edit, root-config,
+   release, CI); docs-only commits run no gate. Mark live-solver / kernel /
    subprocess tests `slow`.
 8. **Visualization & UX** — how the sim is shown and explored: the universal
    figure floor, the interactive surface it needs (notebook and/or thin web app),
@@ -296,9 +300,9 @@ correctness) + the **`steel.ipynb` teaching notebook** (slice 1, an ipywidgets t
 + the **`app.py` Streamlit app** (slice 2, a three-layer thin skin — streamlit/matplotlib-free
 compute helpers, lazy figure builders, a paper-thin `main()`). **All of Steel's planned work
 (Phases 1–4 + the §9 flagship surface) is done.** Full suite **248 green** (234 without the
-optional pycalphad/viz/notebook/app stack) — the tracked invariant (the bare-`pytest`
-commit gate, ADR 0003); the fast inner loop `pytest -m "not slow"` is a derived
-convenience (240 in ~8 s, the live-CALPHAD/notebook tests deselected).
+optional pycalphad/viz/notebook/app stack) — the canonical count, verified at the
+*exceptional* full-gate runs (ADR 0003); the **routine** commit gate is the fast
+`pytest -m "not slow"` (240 in ~8 s, the live-CALPHAD/notebook tests deselected).
 
 **The active build target has moved to Microchip** (`docs/plans/microchip-fabrication.md`, the
 per-project plan #2 — written 2026-06-09). Chip is the **first consumer of the frozen
