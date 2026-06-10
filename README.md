@@ -2,6 +2,16 @@
 
 [![full-gate](https://github.com/BoykoNeov/BigSim/actions/workflows/full-gate.yml/badge.svg)](https://github.com/BoykoNeov/BigSim/actions/workflows/full-gate.yml)
 
+> **📦 Archived — split into three standalone repositories (2026-06-10).**
+> BigSim was an educational *program* of three simulators sharing two separately-validated
+> solver engines. The simulators now live and evolve **independently**, each with the engine(s)
+> it uses vendored in and its full git history preserved:
+> [**steel-sim**](https://github.com/BoykoNeov/steel-sim) ·
+> [**chip-sim**](https://github.com/BoykoNeov/chip-sim) ·
+> [**planet-sim**](https://github.com/BoykoNeov/planet-sim).
+> This monorepo is kept **read-only** as the cross-project narrative — the "one validated engine,
+> three sims" story and the full intertwined history. New work happens in the split repos.
+
 A suite of educational, interactive, experimentation-focused
 physics / engineering / science simulators, built on a small set of shared,
 separately-validated solver engines.

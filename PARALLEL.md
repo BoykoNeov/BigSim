@@ -1,5 +1,13 @@
 # Parallel multi-agent development
 
+> **⚠️ Historical — workflow retired 2026-06-10.** This document describes the multi-agent
+> worktree workflow used while the three simulators were developed *together* in this monorepo.
+> That workflow has been **retired**: the simulators were split into standalone repos
+> ([steel-sim](https://github.com/BoykoNeov/steel-sim) ·
+> [chip-sim](https://github.com/BoykoNeov/chip-sim) ·
+> [planet-sim](https://github.com/BoykoNeov/planet-sim)), so there is no longer cross-project
+> orchestration to coordinate. Kept for the record of how the program was built.
+
 How several Claude sessions develop different subprojects of BigSim at once
 without clobbering each other. **Model A + Claude-managed merges**: separate
 sessions in separate git worktrees, a human supervisor who approves merges, and
