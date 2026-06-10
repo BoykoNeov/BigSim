@@ -17,6 +17,8 @@ Requires the optional ``viz`` extra (``pip install -e .[viz]``).
 """
 from __future__ import annotations
 
+import math
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -851,6 +853,93 @@ def grain_interactive_figure(
     return fig
 
 
+def ideal_diameter_figure(d):
+    """The Phase-6c artifact: the critical-diameter (D_c) / measured-Jominy cross-check.
+
+    ``d`` is a :class:`~projects.steel.demo_ideal_diameter.IdealDiameterDemo` (already-validated
+    arrays — this layer only draws them, ADR 0002). ``D_c`` is the water-quench centre-equivalent
+    critical diameter (a lower bound on the ideal ``D_I``). Two panels:
+
+    * **left — D_c, model vs measured, per grade:** each grade's measured ``D_c`` band is a bar
+      (open arrow where the deepest heats run off the standard bar); the model's ``D_c`` (from
+      ``fM = 0.5``) is a diamond. The read, in order: the **ranking is correct** (grades sorted by
+      hardenability); **4340 under-predicted** (diamond at/below the band's low edge, band off-scale
+      above); shallow grades **ride high**. 4140 (the calibration anchor) sits in its wide band *by
+      construction* — coloured apart, not teeth.
+    * **right — the Jominy curves behind it:** model HRC(J) over the measured band envelopes, with
+      the cited 50 %-martensite hardness (where ``D_c`` is read) dashed per grade — the threshold/
+      conversion-free corroboration; the near-end hardness-map fold shows on the alloy steels.
+    """
+    import matplotlib.pyplot as plt
+    from .ideal_diameter import BENCHMARK_STEELS, JOMINY_STEP_MM, DC_MAX_MM
+
+    # Role palette: the anchor (calibration) set apart from the teeth and the documented edge.
+    ROLE_COLOR = {"anchor": "#9aa0a6", "teeth": PHASE_COLORS["bainite"], "edge": PHASE_COLORS["pearlite"]}
+    GRADE_COLOR = {"1045": PHASE_COLORS["pearlite"], "8620": "#2e8b57",
+                   "4140": PHASE_COLORS["martensite"], "4340": "#6c3fb5"}
+
+    fig, (ax_di, ax_j) = plt.subplots(1, 2, figsize=(13.5, 5.6))
+    order = d.order
+
+    # --- left: D_I bars (measured band) + model markers, by hardenability ---------- #
+    x_right = DC_MAX_MM * 1.12                        # plot edge a touch past the standard-bar limit
+    for i, name in enumerate(order):
+        cc = d.checks[name]
+        me, m = cc.measured, cc.model
+        lo = me.Dc_min_mm
+        hi = x_right if me.upper_off_scale else me.Dc_max_mm
+        color = ROLE_COLOR[cc.role]
+        ax_di.barh(i, hi - lo, left=lo, height=0.46, color=color, alpha=0.30,
+                   edgecolor=color, linewidth=1.3)
+        if me.upper_off_scale:                        # arrow: deepest heats run off the standard bar
+            ax_di.annotate("", (x_right, i), (hi - 6, i),
+                           arrowprops=dict(arrowstyle="-|>", color=color, lw=1.6))
+        mdi = x_right if not np.isfinite(m.Dc_mm) else m.Dc_mm
+        ax_di.plot(mdi, i, "D", ms=11, color=color, mec="0.15", mew=1.0, zorder=5)
+        ax_di.annotate(f"  model {m.Dc_mm:.0f} mm — {cc.verdict}" if np.isfinite(m.Dc_mm)
+                       else "  model off-scale", (mdi, i), textcoords="offset points",
+                       xytext=(6, 9), fontsize=8.0, color="0.2")
+    ax_di.axvline(DC_MAX_MM, color="0.5", ls=":", lw=1.2)
+    ax_di.annotate("standard bar limit\n(EMJ p.29 J32 ≈ 142 mm)", (DC_MAX_MM, len(order) - 0.5),
+                   textcoords="offset points", xytext=(-6, -2), ha="right", va="top",
+                   fontsize=7.6, color="0.4")
+    ax_di.set_yticks(range(len(order)))
+    ax_di.set_yticklabels([f"{n}\n({d.checks[n].role})" for n in order])
+    ax_di.set_ylim(-0.6, len(order) - 0.4)
+    ax_di.set_xlim(0, x_right)
+    ax_di.set_xlabel("critical diameter  D_c  (mm, water-quench centre-equivalent; ≤ ideal D_I)")
+    ax_di.set_title("D_c: model (fM=0.5) vs measured band — ranking correct, 4340 under-predicted",
+                    fontsize=10.0)
+
+    # --- right: the model Jominy HRC(J) curves over the measured band envelopes ----- #
+    for name in order:
+        cc = d.checks[name]
+        steel = BENCHMARK_STEELS[name]
+        col = GRADE_COLOR[name]
+        jb, hmin, hmax = steel._band_arrays()
+        ax_j.fill_between(jb, hmin, hmax, color=col, alpha=0.14, lw=0)         # measured band
+        jh = cc.model.jominy
+        j16 = jh.distance / (JOMINY_STEP_MM * 1e-3)
+        good = np.isfinite(jh.HRC)
+        ax_j.plot(j16[good], jh.HRC[good], color=col, lw=2.0, label=f"{name} model")
+        ax_j.axhline(cc.measured.h50_HRC, color=col, ls=":", lw=1.0, alpha=0.6)
+    ax_j.set_xlim(0, 32)
+    ax_j.set_ylim(18, 62)
+    ax_j.set_xlabel("Jominy distance from quenched end  (1/16 in)")
+    ax_j.set_ylabel("hardness  (HRC)")
+    ax_j.set_title("model HRC(J) over measured bands; dotted = cited 50 %-martensite hardness",
+                   fontsize=10.0)
+    ax_j.legend(loc="upper right", fontsize=8.0, framealpha=0.9)
+
+    fig.suptitle(
+        "Phase 6c — the critical-diameter (D_c) / measured-Jominy cross-check: absolute hardenability "
+        "depth, vs data the model never saw (benchmark MEASURED, not Grossmann-computed)",
+        fontsize=12.0, fontweight="bold",
+    )
+    fig.subplots_adjust(left=0.075, right=0.985, top=0.88, bottom=0.11, wspace=0.20)
+    return fig
+
+
 def bainite_figure(d):
     """The Phase-6b artifact: the bainite bay's **mechanism** (the teeth) and the cited C-curve.
 
@@ -917,4 +1006,107 @@ def bainite_figure(d):
     # Explicit margins (not tight_layout): the two log panels + long y-label otherwise trip
     # matplotlib's auto-layout into a spurious "axes too small" warning.
     fig.subplots_adjust(left=0.075, right=0.975, top=0.88, bottom=0.12, wspace=0.22)
+    return fig
+
+
+def austemper_figure(d):
+    """The Phase-6d artifact: the atlas-anchored austempering hold, in three panels.
+
+    ``d`` is a :class:`~projects.steel.demo_austemper.AustemperDemo` (already-validated arrays —
+    this layer only draws them, ADR 0002).
+
+    * **left — the anchored isothermal diagram, atlas measurements on it:** the model 50 %-line
+      (anchored at ONE cited point, ringed) runs through the *other* measured 50 % points — the
+      holdout teeth, visible. The begin line is drawn honestly as shape-only (anchored at t₅₀ its
+      begin→50 % spacing runs wide — claims stop at the 50 % line). The hold path steps across.
+    * **middle — the hold itself:** completion ``U(t)`` with the predicted vs measured 50 % time
+      at this hold temperature.
+    * **right — hardness vs hold time:** too short a hold leaves austenite that shears to brittle
+      untempered martensite on the cool; past the marked minimum full-transform hold the structure
+      is fully bainitic (the carbon-only bainite placeholder hardness, named).
+    """
+    import matplotlib.pyplot as plt
+
+    fig, (ax_ttt, ax_u, ax_hv) = plt.subplots(1, 3, figsize=(16.0, 5.2))
+    h = d.hold
+
+    # --- left: the anchored isothermal diagram + atlas points + the hold path --- #
+    keep = np.isfinite(d.t50_line) & (d.t50_line < 1e7)
+    ax_ttt.plot(d.t50_line[keep], d.temps[keep], color=PHASE_COLORS["bainite"], lw=2.4,
+                label="model 50 % (anchored, validated)")
+    keep_b = np.isfinite(d.begin_line) & (d.begin_line < 1e7)
+    ax_ttt.plot(d.begin_line[keep_b], d.temps[keep_b], color=PHASE_COLORS["bainite"], lw=1.4,
+                ls="--", alpha=0.7, label="model begin (shape-only — named)")
+    ax_ttt.plot(d.atlas_t50_t, d.atlas_t50_T, "o", color="0.15", ms=6.5, zorder=5,
+                label="atlas 50 % (measured)")
+    ax_ttt.plot(d.atlas_begin_t, d.atlas_begin_T, "o", mfc="none", mec="0.15", ms=6.5, zorder=5,
+                label="atlas begin (measured)")
+    ax_ttt.plot([d.anchor_t50], [d.anchor_T], "o", mfc="none", mec="#c0392b", ms=13, mew=2.2,
+                zorder=6, label="THE anchor (one cited point)")
+    # The hold path: instant quench in, hold at T_hold, quench out (drawn at the left edge).
+    t_lo = max(min(d.atlas_begin_t.min(), d.begin_line[keep_b].min()) * 0.2, 1e-2)
+    ax_ttt.plot([t_lo, h.t_hold], [h.T_hold, h.T_hold], color=PHASE_COLORS["martensite"],
+                lw=2.0, zorder=4)
+    ax_ttt.plot([h.t_hold, h.t_hold], [h.T_hold, d.Ms - 60.0], color=PHASE_COLORS["martensite"],
+                lw=2.0, zorder=4)
+    ax_ttt.annotate("hold", (math.sqrt(t_lo * h.t_hold), h.T_hold), textcoords="offset points",
+                    xytext=(0, 5), ha="center", fontsize=8.5, color=PHASE_COLORS["martensite"])
+    for T_line, name in ((d.Bs, "Bₛ (Steven–Haynes)"), (d.Ms, "Mₛ (Andrews)")):
+        ax_ttt.axhline(T_line, color="0.45", ls=":", lw=1.2)
+        ax_ttt.annotate(f"  {name}", (1.0, T_line), xycoords=("axes fraction", "data"),
+                        ha="right", va="bottom", fontsize=8.5, color="0.35")
+    ax_ttt.set_xscale("log")
+    ax_ttt.set_xlabel("time  (s)")
+    ax_ttt.set_ylabel("temperature  (°C)")
+    ax_ttt.set_ylim(d.Ms - 70.0, d.Bs + 35.0)
+    ax_ttt.set_title(f"{d.steel}: one anchor point → the whole 50 % line (holdout)", fontsize=10.5)
+    ax_ttt.legend(loc="lower right", fontsize=7.8, framealpha=0.9)
+
+    # --- middle: the hold's completion U(t) ----------------------------------- #
+    ax_u.plot(h.t, h.U, color=PHASE_COLORS["bainite"], lw=2.4)
+    ax_u.axhline(0.5, color="0.6", ls=":", lw=1.0)
+    ax_u.axvline(d.predicted_t50_here, color=PHASE_COLORS["bainite"], ls="--", lw=1.4)
+    ax_u.annotate(f"predicted t₅₀ ≈ {d.predicted_t50_here:.0f} s",
+                  (d.predicted_t50_here, 0.52), textcoords="offset points", xytext=(6, 0),
+                  fontsize=8.5, color=PHASE_COLORS["bainite"])
+    if np.isfinite(d.measured_t50_here):
+        ax_u.plot([d.measured_t50_here], [0.5], "o", color="0.15", ms=7, zorder=5)
+        ax_u.annotate(f"atlas: {d.measured_t50_here:.0f} s", (d.measured_t50_here, 0.5),
+                      textcoords="offset points", xytext=(8, -14), fontsize=8.5, color="0.15")
+    ax_u.set_xlabel("hold time  (s)")
+    ax_u.set_ylabel("bainite completion  U")
+    ax_u.set_ylim(-0.02, 1.05)
+    ax_u.set_xlim(0.0, h.t_hold)
+    # Only an atlas-measured, non-anchor temperature earns the "holdout" tag (the app drives
+    # arbitrary holds through this same figure).
+    holdout = " — a holdout temperature" if (np.isfinite(d.measured_t50_here)
+                                             and d.T_hold != d.anchor_T) else ""
+    ax_u.set_title(f"the hold at {h.T_hold:.0f} °C{holdout}", fontsize=10.5)
+
+    # --- right: hardness vs hold time + the minimum full-transform hold ------- #
+    ax_hv.plot(d.sweep_t, d.sweep_HV, color="0.2", lw=2.4)
+    ax_hv.axvline(d.min_full_hold, color=PHASE_COLORS["bainite"], ls="--", lw=1.4)
+    ax_hv.annotate(f"minimum full-transform\nhold ≈ {d.min_full_hold:.0f} s",
+                   (d.min_full_hold, float(np.max(d.sweep_HV))), textcoords="offset points",
+                   xytext=(8, -16), fontsize=8.5, color=PHASE_COLORS["bainite"])
+    ax_hv.annotate("short hold → leftover austenite\nshears to brittle untempered\nmartensite on the cool",
+                   (0.03, 0.69), xycoords="axes fraction", fontsize=8, color=PHASE_COLORS["martensite"])
+    HV_full = float(d.sweep_HV[-1])
+    HRC_full = vickers_to_rockwell_c_safe(np.array([HV_full]))[0]
+    tag = f"fully bainitic ≈ {HV_full:.0f} HV / {HRC_full:.0f} HRC" if np.isfinite(HRC_full) \
+        else f"fully bainitic ≈ {HV_full:.0f} HV"
+    ax_hv.annotate(tag + "\n(carbon-only placeholder — named)",
+                   (0.97, 0.05), xycoords="axes fraction", ha="right", fontsize=8,
+                   color=PHASE_COLORS["bainite"])
+    ax_hv.set_xscale("log")
+    ax_hv.set_xlabel("hold time  (s)")
+    ax_hv.set_ylabel("hardness  (HV)")
+    ax_hv.set_title("the austempering trade: hold long enough", fontsize=10.5)
+
+    fig.suptitle(
+        f"Phase 6d — austempering {d.steel}: the 6b bainite reaction in its valid home "
+        f"(per-steel atlas anchor; claims stop at the 50 % line)",
+        fontsize=12.5, fontweight="bold",
+    )
+    fig.subplots_adjust(left=0.055, right=0.985, top=0.87, bottom=0.12, wspace=0.24)
     return fig
