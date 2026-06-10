@@ -51,8 +51,8 @@ streamlit run projects/steel/app.py         # Steel only — the same what-ifs a
 **Run the tests** (the tiered gate — [ADR 0003](docs/decisions/0003-test-execution-policy.md)):
 
 ```powershell
-./run_tests.ps1 -m "not slow"     # routine fast lane — 530 tests, ~22 s
-./run_tests.ps1                   # full suite — 562 tests (exceptional: engine edit, release, CI)
+./run_tests.ps1 -m "not slow"     # routine fast lane — 556 tests, ~22 s
+./run_tests.ps1                   # full suite — 590 tests (exceptional: engine edit, release, CI)
 python -m tools.gate steel        # just one project + the modules it uses
 ```
 
@@ -100,9 +100,11 @@ and frozen in Steel is the spine the other two inherit.
   headless sweep harness, an interactive teaching notebook, and a Streamlit what-if app.
   See [`projects/steel/README.md`](projects/steel/README.md).
 - **Microchip — complete** (Phases 1–4 + a teaching notebook): dopant diffusion & the pn junction
-  → Deal–Grove oxidation → aerial-image lithography → compact MOS threshold voltage, plus an
-  interactive `chip.ipynb` (per-phase sliders → V_t); the first consumer of the frozen spine
-  (it builds no new engine). See [`projects/chip/README.md`](projects/chip/README.md).
+  → Deal–Grove oxidation (with the v1.1 thin-dry **Massoud** correction — the gate-oxide regime where
+  plain Deal–Grove under-predicts, a +0.44 V swing in the process→device chain) → aerial-image
+  lithography → compact MOS threshold voltage, plus an interactive `chip.ipynb` (per-phase sliders →
+  V_t); the first consumer of the frozen spine (it builds no new engine).
+  See [`projects/chip/README.md`](projects/chip/README.md).
 - **Planet (the Earth-system capstone) — all four phases built; the capstone is complete.** *Phase 1* (the latitudinal
   energy-balance model & the Snowball bifurcation): the diffusion spine reuses a **third** time as a
   sphere's latitudinal heat transport, with the radiation **Strang-split** around it (the Jominy
@@ -124,15 +126,16 @@ and frozen in Steel is the spine the other two inherit.
   **geostrophically-balanced westerly jet emerges** (~16.5 m/s @ ~42°) at the climate's gradient
   maximum, flanked by the easterly return the doubly-periodic channel requires; the interactive map now
   paints the jet as a `vector_overlay`. One-way / dry (two-way = rung 1, the `tracer` seam).
-  Two **exoplanet knobs** extend the deep end (stellar spectrum → ice albedo, so a redder star
-  resists Snowball; planet size → transport, derived `D ∝ 1/size²`) — both wired into the
-  interactive map's sliders, with the Sun + Earth-size defaults recovering the present-day
+  Three **exoplanet knobs** extend the deep end (stellar spectrum → ice albedo, so a redder star
+  resists Snowball; planet size → transport, derived `D ∝ 1/size²`; axial tilt → annual-mean
+  insolation `s₂(ε)` from first principles, the last deferred slider, now wired) — all wired into the
+  interactive map's sliders, with the Sun + Earth-size + 23.44° defaults recovering the present-day
   model exactly. See [`projects/planet/README.md`](projects/planet/README.md).
 
-Sixteen banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
+Eighteen banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
 (`planet-map.html`, the deep-end biome map; `planet-coupler-map.html`, the emergent jet over the
-temperature field). The suite is **562 tests**, all green (the live-climlab cross-check skips without
-the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **530 run in the
+temperature field). The suite is **590 tests**, all green (the live-climlab cross-check skips without
+the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **556 run in the
 ~22 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
 the rest `slow` live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
