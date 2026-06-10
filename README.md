@@ -51,8 +51,8 @@ streamlit run projects/steel/app.py         # Steel only — the same what-ifs a
 **Run the tests** (the tiered gate — [ADR 0003](docs/decisions/0003-test-execution-policy.md)):
 
 ```powershell
-./run_tests.ps1 -m "not slow"     # routine fast lane — 338 tests, ~11 s
-./run_tests.ps1                   # full suite — 347 tests (exceptional: engine edit, release, CI)
+./run_tests.ps1 -m "not slow"     # routine fast lane — 530 tests, ~22 s
+./run_tests.ps1                   # full suite — 562 tests (exceptional: engine edit, release, CI)
 python -m tools.gate steel        # just one project + the modules it uses
 ```
 
@@ -88,15 +88,16 @@ and frozen in Steel is the spine the other two inherit.
 
 ## Status
 
-**The shared spine is frozen, the first two projects are complete, and the Earth-system capstone is under way (Phases 1–2 built).**
+**Both shared engines are frozen and all three projects are complete — the capstone included.**
 
 - **Engine — diffusion/heat (the spine):** built and **frozen** behind
   [`engines/diffusion/CONTRACT.md`](engines/diffusion/CONTRACT.md) — the erfc-validated,
   conservative 1-D parabolic solver (heat *and* mass mode) the whole trio inherits.
-- **Steel — complete** (Phases 1–4 + the experimentation surface): Fe-C equilibrium →
+- **Steel — complete** (Phases 1–6 + the experimentation surface): Fe-C equilibrium →
   transformation kinetics → Jominy hardenability → structure→properties → tempering →
-  carburizing → an optional CALPHAD backend, plus a headless sweep harness, an interactive
-  teaching notebook, and a Streamlit what-if app.
+  carburizing → an optional CALPHAD backend → austenite grain growth & the grain-size→
+  yield/DBTT pair → the proeutectoid-ferrite bay + the cited bainite reaction, plus a
+  headless sweep harness, an interactive teaching notebook, and a Streamlit what-if app.
   See [`projects/steel/README.md`](projects/steel/README.md).
 - **Microchip — complete** (Phases 1–4 + a teaching notebook): dopant diffusion & the pn junction
   → Deal–Grove oxidation → aerial-image lithography → compact MOS threshold voltage, plus an
@@ -123,13 +124,16 @@ and frozen in Steel is the spine the other two inherit.
   **geostrophically-balanced westerly jet emerges** (~16.5 m/s @ ~42°) at the climate's gradient
   maximum, flanked by the easterly return the doubly-periodic channel requires; the interactive map now
   paints the jet as a `vector_overlay`. One-way / dry (two-way = rung 1, the `tracer` seam).
-  See [`projects/planet/README.md`](projects/planet/README.md).
+  Two **exoplanet knobs** extend the deep end (stellar spectrum → ice albedo, so a redder star
+  resists Snowball; planet size → transport, derived `D ∝ 1/size²`) — both wired into the
+  interactive map's sliders, with the Sun + Earth-size defaults recovering the present-day
+  model exactly. See [`projects/planet/README.md`](projects/planet/README.md).
 
-Fourteen banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
+Sixteen banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
 (`planet-map.html`, the deep-end biome map; `planet-coupler-map.html`, the emergent jet over the
-temperature field). The suite is **533 tests**, all green (the live-climlab cross-check skips without
-the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **503 run in the
-~15 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
+temperature field). The suite is **562 tests**, all green (the live-climlab cross-check skips without
+the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **530 run in the
+~22 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
 the rest `slow` live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
 
