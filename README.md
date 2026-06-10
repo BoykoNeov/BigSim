@@ -51,8 +51,8 @@ streamlit run projects/steel/app.py         # Steel only — the same what-ifs a
 **Run the tests** (the tiered gate — [ADR 0003](docs/decisions/0003-test-execution-policy.md)):
 
 ```powershell
-./run_tests.ps1 -m "not slow"     # routine fast lane — 556 tests, ~22 s
-./run_tests.ps1                   # full suite — 590 tests (exceptional: engine edit, release, CI)
+./run_tests.ps1 -m "not slow"     # routine fast lane — 610 tests, ~24 s
+./run_tests.ps1                   # full suite — 644 tests (exceptional: engine edit, release, CI)
 python -m tools.gate steel        # just one project + the modules it uses
 ```
 
@@ -132,11 +132,11 @@ and frozen in Steel is the spine the other two inherit.
   interactive map's sliders, with the Sun + Earth-size + 23.44° defaults recovering the present-day
   model exactly. See [`projects/planet/README.md`](projects/planet/README.md).
 
-Eighteen banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
+Twenty-one banked figures live in [`docs/figures/`](docs/figures/), plus **two interactive globes**
 (`planet-map.html`, the deep-end biome map; `planet-coupler-map.html`, the emergent jet over the
-temperature field). The suite is **590 tests**, all green (the live-climlab cross-check skips without
-the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **556 run in the
-~22 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
+temperature field). The suite is **644 tests**, all green (the live-climlab cross-check skips without
+the `[climate]` extra, and the Plotly map render smoke-tests skip without `[webviz]`): **610 run in the
+~24 s fast lane** (`./run_tests.ps1 -m "not slow"`), with
 the rest `slow` live-solver/kernel tests reserved for the full gate (the tiered policy,
 [ADR 0003](docs/decisions/0003-test-execution-policy.md)). See **Quickstart** above to run them.
 
